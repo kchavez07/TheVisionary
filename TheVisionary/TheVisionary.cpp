@@ -145,7 +145,7 @@ HRESULT InitWindow(HINSTANCE hInstance, int nCmdShow)
     wcex.hCursor = LoadCursor(NULL, IDC_ARROW);
     wcex.hbrBackground = (HBRUSH)(COLOR_WINDOW + 1);
     wcex.lpszMenuName = NULL;
-    wcex.lpszClassName = L"TutorialWindowClass";
+    wcex.lpszClassName = "TutorialWindowClass";
     wcex.hIconSm = LoadIcon(wcex.hInstance, (LPCTSTR)IDI_TUTORIAL1);
     if (!RegisterClassEx(&wcex))
         return E_FAIL;
@@ -154,7 +154,7 @@ HRESULT InitWindow(HINSTANCE hInstance, int nCmdShow)
     g_hInst = hInstance;
     RECT rc = { 0, 0, 640, 480 };
     AdjustWindowRect(&rc, WS_OVERLAPPEDWINDOW, FALSE);
-    g_hWnd = CreateWindow(L"TutorialWindowClass", L"Direct3D 11 Tutorial 7 - Sombras Planas", WS_OVERLAPPEDWINDOW,
+    g_hWnd = CreateWindow("TutorialWindowClass", "Direct3D 11 Tutorial 7 - Sombras Planas", WS_OVERLAPPEDWINDOW,
         CW_USEDEFAULT, CW_USEDEFAULT, rc.right - rc.left, rc.bottom - rc.top, NULL, NULL, hInstance,
         NULL);
     if (!g_hWnd)
@@ -168,7 +168,7 @@ HRESULT InitWindow(HINSTANCE hInstance, int nCmdShow)
 //--------------------------------------------------------------------------------------
 // Función auxiliar para compilar shaders con D3DX11
 //--------------------------------------------------------------------------------------
-HRESULT CompileShaderFromFile(WCHAR* szFileName, LPCSTR szEntryPoint, LPCSTR szShaderModel, ID3DBlob** ppBlobOut)
+HRESULT CompileShaderFromFile(char* szFileName, LPCSTR szEntryPoint, LPCSTR szShaderModel, ID3DBlob** ppBlobOut)
 {
     HRESULT hr = S_OK;
 
@@ -303,11 +303,11 @@ HRESULT InitDevice()
 
     // Compilar y crear el vertex shader
     ID3DBlob* pVSBlob = NULL;
-    hr = CompileShaderFromFile(L"TheVisionary.fx", "VS", "vs_4_0", &pVSBlob);
+    hr = CompileShaderFromFile("TheVisionary.fx", "VS", "vs_4_0", &pVSBlob);
     if (FAILED(hr))
     {
         MessageBox(NULL,
-            L"El archivo FX no se pudo compilar. Ejecuta el ejecutable desde el directorio que contiene el archivo FX.", L"Error", MB_OK);
+            "El archivo FX no se pudo compilar. Ejecuta el ejecutable desde el directorio que contiene el archivo FX.", "Error", MB_OK);
         return hr;
     }
 
@@ -336,11 +336,11 @@ HRESULT InitDevice()
 
     // Compilar y crear el pixel shader (normal)
     ID3DBlob* pPSBlob = NULL;
-    hr = CompileShaderFromFile(L"TheVisionary.fx", "PS", "ps_4_0", &pPSBlob);
+    hr = CompileShaderFromFile("TheVisionary.fx", "PS", "ps_4_0", &pPSBlob);
     if (FAILED(hr))
     {
         MessageBox(NULL,
-            L"El archivo FX no se pudo compilar. Ejecuta el ejecutable desde el directorio que contiene el archivo FX.", L"Error", MB_OK);
+            "El archivo FX no se pudo compilar. Ejecuta el ejecutable desde el directorio que contiene el archivo FX.", "Error", MB_OK);
         return hr;
     }
 
@@ -457,7 +457,7 @@ HRESULT InitDevice()
         return hr;
 
     // Cargar la textura
-    hr = D3DX11CreateShaderResourceViewFromFile(g_pd3dDevice, L"seafloor.dds", NULL, NULL, &g_pTextureRV, NULL);
+    hr = D3DX11CreateShaderResourceViewFromFile(g_pd3dDevice, "seafloor.dds", NULL, NULL, &g_pTextureRV, NULL);
     if (FAILED(hr))
         return hr;
 
@@ -531,11 +531,11 @@ HRESULT InitDevice()
 
     //------- COMPILAR SHADER DE SOMBRA -------//
     ID3DBlob* pShadowPSBlob = NULL;
-    hr = CompileShaderFromFile(L"TheVisionary.fx", "ShadowPS", "ps_4_0", &pShadowPSBlob);
+    hr = CompileShaderFromFile("TheVisionary.fx", "ShadowPS", "ps_4_0", &pShadowPSBlob);
     if (FAILED(hr))
     {
         MessageBox(NULL,
-            L"Error al compilar el ShadowPS.", L"Error", MB_OK);
+            "Error al compilar el ShadowPS.", "Error", MB_OK);
         return hr;
     }
     hr = g_pd3dDevice->CreatePixelShader(pShadowPSBlob->GetBufferPointer(), pShadowPSBlob->GetBufferSize(), NULL, &g_pShadowPixelShader);
