@@ -423,12 +423,15 @@
   </ItemDefinitionGroup>
   <ItemGroup />
   <ItemGroup>
+    <ClCompile Include="src\Window.cpp" />
     <ClCompile Include="TheVisionary.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="TheVisionary.fx" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="include\Prerequisites.h" />
+    <ClInclude Include="include\Window.h" />
     <CLInclude Include="resource.h" />
     <ResourceCompile Include="TheVisionary.rc" />
   </ItemGroup>
