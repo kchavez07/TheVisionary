@@ -423,6 +423,8 @@
   </ItemDefinitionGroup>
   <ItemGroup />
   <ItemGroup>
+    <ClCompile Include="src\BaseApp.cpp" />
+    <ClCompile Include="src\Device.cpp" />
     <ClCompile Include="src\Window.cpp" />
     <ClCompile Include="TheVisionary.cpp" />
   </ItemGroup>
@@ -430,6 +432,8 @@
     <None Include="TheVisionary.fx" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="include\BaseApp.h" />
+    <ClInclude Include="include\Device.h" />
     <ClInclude Include="include\Prerequisites.h" />
     <ClInclude Include="include\Window.h" />
     <CLInclude Include="resource.h" />
