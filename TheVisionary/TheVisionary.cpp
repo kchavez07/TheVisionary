@@ -1,7 +1,7 @@
 #include "Prerequisites.h"
 #include "Window.h"
 #include "Device.h"
-//Customs 
+// Customs
 Window g_window;
 Device g_device;
 
@@ -12,24 +12,25 @@ Device g_device;
 //HWND                                g_hWnd = NULL;
 D3D_DRIVER_TYPE                     g_driverType = D3D_DRIVER_TYPE_NULL;
 D3D_FEATURE_LEVEL                   g_featureLevel = D3D_FEATURE_LEVEL_11_0;
-//ID3D11Device*                       g_pd3dDevice = NULL;
-ID3D11DeviceContext*                g_pImmediateContext = NULL;
-IDXGISwapChain*                     g_pSwapChain = NULL;
-ID3D11RenderTargetView*             g_pRenderTargetView = NULL;
-ID3D11Texture2D*                    g_pDepthStencil = NULL;
-ID3D11DepthStencilView*             g_pDepthStencilView = NULL;
-ID3D11VertexShader*                 g_pVertexShader = NULL;
-ID3D11PixelShader*                  g_pPixelShader = NULL;
-ID3D11InputLayout*                  g_pVertexLayout = NULL;
-ID3D11Buffer*                       g_pVertexBuffer = NULL;
-ID3D11Buffer*                       g_pIndexBuffer = NULL;
-ID3D11Buffer*                       g_pCBNeverChanges = NULL;
-ID3D11Buffer*                       g_pCBChangeOnResize = NULL;
-ID3D11Buffer*                       g_pCBChangesEveryFrame = NULL;
+//ID3D11Device*                       g_device.m_device = NULL;
+ID3D11DeviceContext* g_pImmediateContext = NULL;
+IDXGISwapChain* g_pSwapChain = NULL;
+ID3D11RenderTargetView* g_pRenderTargetView = NULL;
+ID3D11Texture2D* g_pDepthStencil = NULL;
+ID3D11DepthStencilView* g_pDepthStencilView = NULL;
+ID3D11VertexShader* g_pVertexShader = NULL;
+ID3D11PixelShader* g_pPixelShader = NULL;
+ID3D11InputLayout* g_pVertexLayout = NULL;
+ID3D11Buffer* g_pVertexBuffer = NULL;
+ID3D11Buffer* g_pIndexBuffer = NULL;
+ID3D11Buffer* g_pCBNeverChanges = NULL;
+ID3D11Buffer* g_pCBChangeOnResize = NULL;
+ID3D11Buffer* g_pCBChangesEveryFrame = NULL;
+
 // Variable global para el constant buffer de la luz puntual
-ID3D11Buffer*                       g_pCBPointLight = NULL;
-ID3D11ShaderResourceView*           g_pTextureRV = NULL;
-ID3D11SamplerState*                 g_pSamplerLinear = NULL;
+ID3D11Buffer* g_pCBPointLight = NULL;
+ID3D11ShaderResourceView* g_pTextureRV = NULL;
+ID3D11SamplerState* g_pSamplerLinear = NULL;
 XMMATRIX                            g_World;         // Para el cubo
 XMMATRIX                            g_PlaneWorld;    // Para el plano
 XMMATRIX                            g_View;
@@ -37,12 +38,12 @@ XMMATRIX                            g_Projection;
 XMFLOAT4                            g_vMeshColor(0.7f, 0.7f, 0.7f, 1.0f);
 
 //----- Variables agregadas para el plano y sombras -----//
-ID3D11Buffer*                       g_pPlaneVertexBuffer = NULL;
-ID3D11Buffer*                       g_pPlaneIndexBuffer = NULL;
+ID3D11Buffer* g_pPlaneVertexBuffer = NULL;
+ID3D11Buffer* g_pPlaneIndexBuffer = NULL;
 UINT                                g_planeIndexCount = 0;
-ID3D11PixelShader*                  g_pShadowPixelShader = NULL;
-ID3D11BlendState*                   g_pShadowBlendState = NULL;
-ID3D11DepthStencilState*            g_pShadowDepthStencilState = NULL;
+ID3D11PixelShader* g_pShadowPixelShader = NULL;
+ID3D11BlendState* g_pShadowBlendState = NULL;
+ID3D11DepthStencilState* g_pShadowDepthStencilState = NULL;
 XMFLOAT4                            g_LightPos(2.0f, 4.0f, -2.0f, 1.0f); // Posición de la luz
 
 //--------------------------------------------------------------------------------------
@@ -54,6 +55,7 @@ void CleanupDevice();
 LRESULT CALLBACK    WndProc(HWND, UINT, WPARAM, LPARAM);
 void UpdateScene();
 void RenderScene();
+
 //--------------------------------------------------------------------------------------
 // Punto de entrada del programa. Inicializa todo y entra en el bucle de mensajes.
 //--------------------------------------------------------------------------------------
@@ -134,7 +136,10 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLi
 //--------------------------------------------------------------------------------------
 // Función auxiliar para compilar shaders con D3DX11
 //--------------------------------------------------------------------------------------
-HRESULT CompileShaderFromFile(char* szFileName, LPCSTR szEntryPoint, LPCSTR szShaderModel, ID3DBlob** ppBlobOut)
+HRESULT CompileShaderFromFile(char* szFileName,
+    LPCSTR szEntryPoint,
+    LPCSTR szShaderModel,
+    ID3DBlob** ppBlobOut)
 {
     HRESULT hr = S_OK;
 
@@ -165,10 +170,10 @@ HRESULT InitDevice()
 {
     HRESULT hr = S_OK;
 
-  // RECT rc;
-  //GetClientRect(g_hWnd, &rc);
-  //UINT width = rc.right - rc.left;
-  //UINT height = rc.bottom - rc.top;
+    //RECT rc;
+    //GetClientRect(g_hWnd, &rc);
+    //UINT width = rc.right - rc.left;
+    //UINT height = rc.bottom - rc.top;
 
     UINT createDeviceFlags = 0;
 #ifdef _DEBUG
@@ -227,7 +232,6 @@ HRESULT InitDevice()
     if (FAILED(hr))
         return hr;
 
-
     // Crear textura de depth stencil
     D3D11_TEXTURE2D_DESC descDepth;
     ZeroMemory(&descDepth, sizeof(descDepth));
@@ -278,7 +282,7 @@ HRESULT InitDevice()
         return hr;
     }
 
-    hr = g_device.m_device->CreateVertexShader(pVSBlob->GetBufferPointer(), pVSBlob->GetBufferSize(), NULL, &g_pVertexShader);
+    hr = g_device.CreateVertexShader(pVSBlob->GetBufferPointer(), pVSBlob->GetBufferSize(), NULL, &g_pVertexShader);
     if (FAILED(hr))
     {
         pVSBlob->Release();
@@ -293,7 +297,7 @@ HRESULT InitDevice()
     };
     UINT numElements = ARRAYSIZE(layout);
 
-    hr = g_device.m_device->CreateInputLayout(layout, numElements, pVSBlob->GetBufferPointer(),
+    hr = g_device.CreateInputLayout(layout, numElements, pVSBlob->GetBufferPointer(),
         pVSBlob->GetBufferSize(), &g_pVertexLayout);
     pVSBlob->Release();
     if (FAILED(hr))
@@ -311,7 +315,7 @@ HRESULT InitDevice()
         return hr;
     }
 
-    hr = g_device.m_device->CreatePixelShader(pPSBlob->GetBufferPointer(), pPSBlob->GetBufferSize(), NULL, &g_pPixelShader);
+    hr = g_device.CreatePixelShader(pPSBlob->GetBufferPointer(), pPSBlob->GetBufferSize(), NULL, &g_pPixelShader);
     pPSBlob->Release();
     if (FAILED(hr))
         return hr;
@@ -359,7 +363,7 @@ HRESULT InitDevice()
     D3D11_SUBRESOURCE_DATA InitData;
     ZeroMemory(&InitData, sizeof(InitData));
     InitData.pSysMem = vertices;
-    hr = g_device.m_device->CreateBuffer(&bd, &InitData, &g_pVertexBuffer);
+    hr = g_device.CreateBuffer(&bd, &InitData, &g_pVertexBuffer);
     if (FAILED(hr))
         return hr;
 
@@ -395,7 +399,7 @@ HRESULT InitDevice()
     bd.BindFlags = D3D11_BIND_INDEX_BUFFER;
     bd.CPUAccessFlags = 0;
     InitData.pSysMem = indices;
-    hr = g_device.m_device->CreateBuffer(&bd, &InitData, &g_pIndexBuffer);
+    hr = g_device.CreateBuffer(&bd, &InitData, &g_pIndexBuffer);
     if (FAILED(hr))
         return hr;
 
@@ -409,17 +413,17 @@ HRESULT InitDevice()
     bd.ByteWidth = sizeof(CBNeverChanges);
     bd.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
     bd.CPUAccessFlags = 0;
-    hr = g_device.m_device->CreateBuffer(&bd, NULL, &g_pCBNeverChanges);
+    hr = g_device.CreateBuffer(&bd, NULL, &g_pCBNeverChanges);
     if (FAILED(hr))
         return hr;
 
     bd.ByteWidth = sizeof(CBChangeOnResize);
-    hr = g_device.m_device->CreateBuffer(&bd, NULL, &g_pCBChangeOnResize);
+    hr = g_device.CreateBuffer(&bd, NULL, &g_pCBChangeOnResize);
     if (FAILED(hr))
         return hr;
 
     bd.ByteWidth = sizeof(CBChangesEveryFrame);
-    hr = g_device.m_device->CreateBuffer(&bd, NULL, &g_pCBChangesEveryFrame);
+    hr = g_device.CreateBuffer(&bd, NULL, &g_pCBChangesEveryFrame);
     if (FAILED(hr))
         return hr;
 
@@ -438,7 +442,7 @@ HRESULT InitDevice()
     sampDesc.ComparisonFunc = D3D11_COMPARISON_NEVER;
     sampDesc.MinLOD = 0;
     sampDesc.MaxLOD = D3D11_FLOAT32_MAX;
-    hr = g_device.m_device->CreateSamplerState(&sampDesc, &g_pSamplerLinear);
+    hr = g_device.CreateSamplerState(&sampDesc, &g_pSamplerLinear);
     if (FAILED(hr))
         return hr;
 
@@ -483,7 +487,7 @@ HRESULT InitDevice()
     bd.BindFlags = D3D11_BIND_VERTEX_BUFFER;
     bd.CPUAccessFlags = 0;
     InitData.pSysMem = planeVertices;
-    hr = g_device.m_device->CreateBuffer(&bd, &InitData, &g_pPlaneVertexBuffer);
+    hr = g_device.CreateBuffer(&bd, &InitData, &g_pPlaneVertexBuffer);
     if (FAILED(hr))
         return hr;
 
@@ -492,7 +496,7 @@ HRESULT InitDevice()
     bd.BindFlags = D3D11_BIND_INDEX_BUFFER;
     bd.CPUAccessFlags = 0;
     InitData.pSysMem = planeIndices;
-    hr = g_device.m_device->CreateBuffer(&bd, &InitData, &g_pPlaneIndexBuffer);
+    hr = g_device.CreateBuffer(&bd, &InitData, &g_pPlaneIndexBuffer);
     if (FAILED(hr))
         return hr;
 
@@ -505,7 +509,7 @@ HRESULT InitDevice()
             "Error al compilar el ShadowPS.", "Error", MB_OK);
         return hr;
     }
-    hr = g_device.m_device->CreatePixelShader(pShadowPSBlob->GetBufferPointer(), pShadowPSBlob->GetBufferSize(), NULL, &g_pShadowPixelShader);
+    hr = g_device.CreatePixelShader(pShadowPSBlob->GetBufferPointer(), pShadowPSBlob->GetBufferSize(), NULL, &g_pShadowPixelShader);
     pShadowPSBlob->Release();
     if (FAILED(hr))
         return hr;
@@ -534,8 +538,6 @@ HRESULT InitDevice()
     hr = g_device.m_device->CreateDepthStencilState(&dsDesc, &g_pShadowDepthStencilState);
     if (FAILED(hr))
         return hr;
-
-
 
     return S_OK;
 }
