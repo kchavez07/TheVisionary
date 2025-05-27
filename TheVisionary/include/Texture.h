@@ -1,28 +1,44 @@
 #pragma once
 #include "Prerequisites.h"
 
-class Texture
-{
+class Device;
+class DeviceContext;
+
+class
+	Texture {
 public:
-    Texture() = default;
-    ~Texture() = default;
+	Texture() = default;
+	~Texture() = default;
 
-    void 
-    init();
+	HRESULT
+		init(Device device,
+			const std::string& textureName,
+			ExtensionType extensionType);
 
-    void 
-    update();
+	HRESULT
+		init(Device device,
+			unsigned int width,
+			unsigned int height,
+			DXGI_FORMAT Format,
+			unsigned int BindFlags,
+			unsigned int sampleCount = 1,
+			unsigned int qualityLevels = 0);
 
-    void 
-    render();
+	HRESULT
+		init(Device& device, Texture& textureRef, DXGI_FORMAT format);
 
-    void 
-    destroy();
+	void
+		update();
+
+	void
+		render(DeviceContext& deviceContext, unsigned int StartSlot, unsigned int NumViews);
+
+	void
+		destroy();
 
 public:
-    // This variable is in charge of handling a texture resource as data
-    ID3D11Texture2D* m_texture = nullptr;
-
-    // This variable is in charge of handling a texture resource as image data
-    ID3D11ShaderResourceView* m_textureFromImg;
+	// This variable is in charge of handle a texture resource as data
+	ID3D11Texture2D* m_texture = nullptr;
+	// This variable is in charge of handle a texture resource as image data
+	ID3D11ShaderResourceView* m_textureFromImg;
 };

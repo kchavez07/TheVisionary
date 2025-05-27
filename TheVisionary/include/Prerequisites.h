@@ -1,5 +1,5 @@
 #pragma once
-// Librerias Std 
+// Librerias STD
 #include <string>
 #include <sstream>
 #include <vector>
@@ -11,9 +11,8 @@
 #include <d3d11.h>
 #include <d3dx11.h>
 #include <d3dcompiler.h>
-#include "resource.h"
 #include "Resource.h"
-
+#include "resource.h"
 
 // MACROS
 #define SAFE_RELEASE(x) if(x != nullptr) x->Release(); x = nullptr;
@@ -37,26 +36,32 @@
     }                                                         \
 }
 
-
-// Estructuras
-struct SimpleVertex
-{
+// Structures
+struct
+    SimpleVertex {
     XMFLOAT3 Pos;
     XMFLOAT2 Tex;
 };
 
-struct CBNeverChanges
-{
+struct
+    CBNeverChanges {
     XMMATRIX mView;
 };
 
-struct CBChangeOnResize
-{
+struct
+    CBChangeOnResize {
     XMMATRIX mProjection;
 };
 
-struct CBChangesEveryFrame
-{
+struct
+    CBChangesEveryFrame {
     XMMATRIX mWorld;
     XMFLOAT4 vMeshColor;
+};
+
+enum
+    ExtensionType {
+    DDS = 0,
+    PNG = 1,
+    JPG = 2
 };

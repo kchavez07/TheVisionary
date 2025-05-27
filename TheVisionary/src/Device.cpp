@@ -305,15 +305,14 @@ Device::CreateDepthStencilState(const D3D11_DEPTH_STENCIL_DESC* pDepthStencilDes
 	return hr;
 }
 
-HRESULT Device::CreateRasterizerState(const D3D11_RASTERIZER_DESC* pRasterizerDesc,
-	ID3D11RasterizerState** ppRasterizerState)
-{
-	// Validar parámetros de entrada
+HRESULT
+Device::CreateRasterizerState(const D3D11_RASTERIZER_DESC* pRasterizerDesc,
+	ID3D11RasterizerState** ppRasterizerState) {
+	// Validar parametros de entrada
 	if (!pRasterizerDesc) {
 		ERROR("Device", "CreateRasterizerState", "pRasterizerDesc is nullptr");
 		return E_INVALIDARG;
 	}
-
 	if (!ppRasterizerState) {
 		ERROR("Device", "CreateRasterizerState", "ppRasterizerState is nullptr");
 		return E_POINTER;
@@ -323,7 +322,8 @@ HRESULT Device::CreateRasterizerState(const D3D11_RASTERIZER_DESC* pRasterizerDe
 	HRESULT hr = m_device->CreateRasterizerState(pRasterizerDesc, ppRasterizerState);
 
 	if (SUCCEEDED(hr)) {
-		MESSAGE("Device", "CreateRasterizerState", "Rasterizer State created successfully!");
+		MESSAGE("Device", "CreateRasterizerState",
+			"Rasterizer State created successfully!");
 	}
 	else {
 		ERROR("Device", "CreateRasterizerState",
