@@ -444,6 +444,7 @@
     <ClInclude Include="include\DeviceContext.h" />
     <ClInclude Include="include\Prerequisites.h" />
     <ClInclude Include="include\RenderTargetView.h" />
+    <ClInclude Include="include\Resource.h" />
     <ClInclude Include="include\SwapChain.h" />
     <ClInclude Include="include\Texture.h" />
     <ClInclude Include="include\Viewport.h" />

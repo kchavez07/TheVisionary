@@ -50,6 +50,9 @@
     <ClInclude Include="include\Viewport.h">
       <Filter>include</Filter>
     </ClInclude>
+    <ClInclude Include="include\Resource.h">
+      <Filter>include</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="TheVisionary.cpp" />

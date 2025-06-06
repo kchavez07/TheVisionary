@@ -3,30 +3,30 @@
 #include "Window.h"
 
 class
-    BaseApp {
+	BaseApp {
 public:
-    BaseApp() = default;
-    ~BaseApp() = default;
+	BaseApp() = default;
+	~BaseApp() = default;
 
-    HRESULT
-    init();
+	HRESULT
+		init();
 
-    void
-    update();
+	void
+		update();
 
-    void
-    render();
+	void
+		render();
 
-    void
-    destroy();
+	void
+		destroy();
 
-    int
-    run(HINSTANCE hInstance,
-        HINSTANCE hPrevInstance,
-        LPWSTR lpCmdLine,
-        int nCmdShow,
-        WNDPROC wndproc);
+	int
+		run(HINSTANCE hInstance,
+			HINSTANCE hPrevInstance,
+			LPWSTR lpCmdLine,
+			int nCmdShow,
+			WNDPROC wndproc);
 
 private:
-    Window g_window;
+	Window m_window;
 };
