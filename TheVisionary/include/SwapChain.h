@@ -1,13 +1,14 @@
 #pragma once
 #include "Prerequisites.h"
 
-// Forward declarations para evitar dependencias circulares o inclusiones innecesarias
+// Forward declarations para evitar dependencias circulares
 class Device;
 class DeviceContext;
 class Window;
 class Texture;
 
 /**
+ * @file SwapChain.h
  * @class SwapChain
  * @brief Maneja la presentación de imágenes en pantalla mediante buffers intercambiables.
  *
@@ -17,9 +18,9 @@ class Texture;
  */
 class SwapChain {
 public:
-     /**
-      * @brief Constructor por defecto.
-      */
+    /**
+     * @brief Constructor por defecto.
+     */
     SwapChain() = default;
 
     /**
@@ -37,9 +38,9 @@ public:
      * @return HRESULT Código de éxito o error.
      */
     HRESULT init(Device& device,
-        DeviceContext& deviceContext,
-        Texture& backBuffer,
-        Window window);
+                 DeviceContext& deviceContext,
+                 Texture& backBuffer,
+                 Window window);
 
     /**
      * @brief Método de actualización. Placeholder para lógica futura.
@@ -61,15 +62,9 @@ public:
      */
     void present();
 
-    /** =======================
-     *  ATRIBUTOS PÚBLICOS
-     *  ======================= */
-
-     /**
-      * @brief Puntero principal a la cadena de intercambio de DXGI.
-      *
-      * Utilizado para presentar el contenido en la ventana.
-      */
+    /**
+     * @brief Puntero principal a la cadena de intercambio de DXGI.
+     */
     IDXGISwapChain* m_swapChain = nullptr;
 
     /**
@@ -78,27 +73,23 @@ public:
     D3D_DRIVER_TYPE m_driverType = D3D_DRIVER_TYPE_NULL;
 
 private:
-     /**
-      * @brief Nivel de características de DirectX soportado por el dispositivo.
-      */
+    /**
+     * @brief Nivel de características de DirectX soportado por el dispositivo.
+     */
     D3D_FEATURE_LEVEL m_featureLevel = D3D_FEATURE_LEVEL_11_0;
 
     /**
      * @brief Número de muestras para MSAA (antialiasing).
-     *
-     * Mejora visual al suavizar bordes en objetos renderizados.
      */
     unsigned int m_sampleCount;
 
     /**
-     * @brief Número de niveles de calidad disponibles para MSAA según el hardware.
+     * @brief Niveles de calidad disponibles para MSAA según el hardware.
      */
     unsigned int m_qualityLevels;
 
     /**
      * @brief Interfaces internas de DXGI necesarias para crear la swap chain.
-     *
-     * Se obtienen a través del dispositivo.
      */
     IDXGIDevice* m_dxgiDevice = nullptr;
     IDXGIAdapter* m_dxgiAdapter = nullptr;

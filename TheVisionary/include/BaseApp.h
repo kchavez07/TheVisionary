@@ -3,6 +3,7 @@
 #include "Window.h"
 
 /**
+ * @file BaseApp.h
  * @class BaseApp
  * @brief Clase base para una aplicación de motor gráfico con DirectX.
  *
@@ -12,9 +13,9 @@
  */
 class BaseApp {
 public:
-     /**
-      * @brief Constructor por defecto.
-      */
+    /**
+     * @brief Constructor por defecto.
+     */
     BaseApp() = default;
 
     /**
@@ -70,8 +71,8 @@ public:
         WNDPROC wndproc);
 
 private:
-     /**
-      * @brief Objeto que representa la ventana principal de la aplicación.
-      */
+    /**
+     * @brief Objeto que representa la ventana principal de la aplicación.
+     */
     Window m_window;
 };

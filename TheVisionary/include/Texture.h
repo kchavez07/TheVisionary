@@ -1,24 +1,26 @@
 #pragma once
 #include "Prerequisites.h"
 
-// ================================================================
-// @class Texture
-// @brief Representa una textura en DirectX 11.
-// 
-// Esta clase encapsula una textura 2D que puede ser:
-// - Cargada desde un archivo de imagen.
-// - Generada en tiempo de ejecución como render target o depth buffer.
-// También contiene una ShaderResourceView asociada para uso en shaders.
-// ================================================================
+/**
+ * @file Texture.h
+ * @class Texture
+ * @brief Representa una textura en DirectX 11.
+ *
+ * Esta clase encapsula una textura 2D que puede ser:
+ * - Cargada desde un archivo de imagen.
+ * - Generada en tiempo de ejecución como render target o depth buffer.
+ * También contiene una ShaderResourceView asociada para uso en shaders.
+ */
 
+ // Declaraciones anticipadas
 class Device;
 class DeviceContext;
 
 class Texture {
 public:
-     /**
-      * @brief Constructor por defecto.
-      */
+    /**
+     * @brief Constructor por defecto.
+     */
     Texture() = default;
 
     /**
@@ -70,7 +72,8 @@ public:
 
     /**
      * @brief Actualiza internamente la textura.
-     * Actualmente no implementado (placeholder).
+     *
+     * Placeholder no implementado.
      */
     void update();
 
@@ -91,14 +94,16 @@ public:
     void destroy();
 
 public:
-     /**
-      * @brief Recurso base de la textura (2D).
-      * Puede contener datos de imagen, render target, etc.
-      */
+    /**
+     * @brief Recurso base de la textura (2D).
+     *
+     * Puede contener datos de imagen, render target, etc.
+     */
     ID3D11Texture2D* m_texture = nullptr;
 
     /**
      * @brief Vista usada para aplicar la textura en shaders.
+     *
      * Es utilizada por el pipeline gráfico para muestrear la textura.
      */
     ID3D11ShaderResourceView* m_textureFromImg = nullptr;

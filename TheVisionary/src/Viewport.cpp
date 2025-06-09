@@ -1,5 +1,6 @@
 /**
  * @file Viewport.cpp
+ * @brief Implementación de la clase Viewport.
  */
 
 #include "Viewport.h"
@@ -25,6 +26,7 @@ HRESULT Viewport::init(const Window& window) {
 
 	return S_OK;
 }
+
 
 HRESULT Viewport::init(unsigned int width, unsigned int height) {
 	if (width == 0 || height == 0) {

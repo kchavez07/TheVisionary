@@ -2,6 +2,7 @@
 #include "Prerequisites.h"
 
 /**
+ * @file Device.h
  * @class Device
  * @brief Encapsula el dispositivo principal de Direct3D (ID3D11Device).
  *
@@ -11,9 +12,9 @@
  */
 class Device {
 public:
-     /**
-      * @brief Constructor por defecto.
-      */
+    /**
+     * @brief Constructor por defecto.
+     */
     Device() = default;
 
     /**
@@ -162,10 +163,10 @@ public:
     HRESULT CreateRasterizerState(const D3D11_RASTERIZER_DESC* pRasterizerDesc,
         ID3D11RasterizerState** ppRasterizerState);
 
-     /**
-      * @brief Puntero al dispositivo de Direct3D.
-      *
-      * Se utiliza para crear todos los recursos gráficos del motor.
-      */
+    /**
+     * @brief Puntero al dispositivo de Direct3D.
+     *
+     * Se utiliza para crear todos los recursos gráficos del motor.
+     */
     ID3D11Device* m_device = nullptr;
 };

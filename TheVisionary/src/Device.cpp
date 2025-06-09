@@ -5,13 +5,11 @@
 
 #include "Device.h"
 
-void
-Device::destroy() {
+void Device::destroy() {
     SAFE_RELEASE(m_device);
 }
 
-HRESULT
-Device::CreateRenderTargetView(ID3D11Resource* pResource,
+HRESULT Device::CreateRenderTargetView(ID3D11Resource* pResource,
     const D3D11_RENDER_TARGET_VIEW_DESC* pDesc,
     ID3D11RenderTargetView** ppRTView) {
     if (!pResource) {
@@ -35,8 +33,7 @@ Device::CreateRenderTargetView(ID3D11Resource* pResource,
     return hr;
 }
 
-HRESULT
-Device::CreateTexture2D(const D3D11_TEXTURE2D_DESC* pDesc,
+HRESULT Device::CreateTexture2D(const D3D11_TEXTURE2D_DESC* pDesc,
     const D3D11_SUBRESOURCE_DATA* pInitialData,
     ID3D11Texture2D** ppTexture2D) {
     if (!pDesc) {
@@ -60,8 +57,7 @@ Device::CreateTexture2D(const D3D11_TEXTURE2D_DESC* pDesc,
     return hr;
 }
 
-HRESULT
-Device::CreateDepthStencilView(ID3D11Resource* pResource,
+HRESULT Device::CreateDepthStencilView(ID3D11Resource* pResource,
     const D3D11_DEPTH_STENCIL_VIEW_DESC* pDesc,
     ID3D11DepthStencilView** ppDepthStencilView) {
     if (!pResource) {
@@ -85,8 +81,7 @@ Device::CreateDepthStencilView(ID3D11Resource* pResource,
     return hr;
 }
 
-HRESULT
-Device::CreateVertexShader(const void* pShaderBytecode,
+HRESULT Device::CreateVertexShader(const void* pShaderBytecode,
     unsigned int BytecodeLength,
     ID3D11ClassLinkage* pClassLinkage,
     ID3D11VertexShader** ppVertexShader) {
@@ -111,8 +106,7 @@ Device::CreateVertexShader(const void* pShaderBytecode,
     return hr;
 }
 
-HRESULT
-Device::CreateInputLayout(const D3D11_INPUT_ELEMENT_DESC* pInputElementDescs,
+HRESULT Device::CreateInputLayout(const D3D11_INPUT_ELEMENT_DESC* pInputElementDescs,
     unsigned int NumElements,
     const void* pShaderBytecodeWithInputSignature,
     unsigned int BytecodeLength,
@@ -138,8 +132,7 @@ Device::CreateInputLayout(const D3D11_INPUT_ELEMENT_DESC* pInputElementDescs,
     return hr;
 }
 
-HRESULT
-Device::CreatePixelShader(const void* pShaderBytecode,
+HRESULT Device::CreatePixelShader(const void* pShaderBytecode,
     unsigned int BytecodeLength,
     ID3D11ClassLinkage* pClassLinkage,
     ID3D11PixelShader** ppPixelShader) {
@@ -164,8 +157,7 @@ Device::CreatePixelShader(const void* pShaderBytecode,
     return hr;
 }
 
-HRESULT
-Device::CreateSamplerState(const D3D11_SAMPLER_DESC* pSamplerDesc,
+HRESULT Device::CreateSamplerState(const D3D11_SAMPLER_DESC* pSamplerDesc,
     ID3D11SamplerState** ppSamplerState) {
     if (!pSamplerDesc) {
         ERROR("Device", "CreateSamplerState", "pSamplerDesc is nullptr");
@@ -188,8 +180,7 @@ Device::CreateSamplerState(const D3D11_SAMPLER_DESC* pSamplerDesc,
     return hr;
 }
 
-HRESULT
-Device::CreateBuffer(const D3D11_BUFFER_DESC* pDesc,
+HRESULT Device::CreateBuffer(const D3D11_BUFFER_DESC* pDesc,
     const D3D11_SUBRESOURCE_DATA* pInitialData,
     ID3D11Buffer** ppBuffer) {
     if (!pDesc) {
@@ -213,8 +204,7 @@ Device::CreateBuffer(const D3D11_BUFFER_DESC* pDesc,
     return hr;
 }
 
-HRESULT
-Device::CreateBlendState(const D3D11_BLEND_DESC* pBlendStateDesc,
+HRESULT Device::CreateBlendState(const D3D11_BLEND_DESC* pBlendStateDesc,
     ID3D11BlendState** ppBlendState) {
     if (!pBlendStateDesc) {
         ERROR("Device", "CreateBlendState", "pBlendStateDesc is nullptr");
@@ -237,8 +227,7 @@ Device::CreateBlendState(const D3D11_BLEND_DESC* pBlendStateDesc,
     return hr;
 }
 
-HRESULT
-Device::CreateDepthStencilState(const D3D11_DEPTH_STENCIL_DESC* pDepthStencilDesc,
+HRESULT Device::CreateDepthStencilState(const D3D11_DEPTH_STENCIL_DESC* pDepthStencilDesc,
     ID3D11DepthStencilState** ppDepthStencilState) {
     if (!pDepthStencilDesc) {
         ERROR("Device", "CreateDepthStencilState", "pDepthStencilDesc is nullptr");
@@ -261,8 +250,7 @@ Device::CreateDepthStencilState(const D3D11_DEPTH_STENCIL_DESC* pDepthStencilDes
     return hr;
 }
 
-HRESULT
-Device::CreateRasterizerState(const D3D11_RASTERIZER_DESC* pRasterizerDesc,
+HRESULT Device::CreateRasterizerState(const D3D11_RASTERIZER_DESC* pRasterizerDesc,
     ID3D11RasterizerState** ppRasterizerState) {
     if (!pRasterizerDesc) {
         ERROR("Device", "CreateRasterizerState", "pRasterizerDesc is nullptr");

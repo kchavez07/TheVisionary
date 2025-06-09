@@ -11,6 +11,7 @@
 HRESULT DepthStencilView::init(Device& device, Texture& depthStencil, DXGI_FORMAT format) {
     if (!device.m_device) {
         ERROR("DepthStencilView", "init", "Device is null.");
+        return E_POINTER;
     }
 
     if (!depthStencil.m_texture) {

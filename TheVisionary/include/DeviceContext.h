@@ -1,19 +1,24 @@
+/**
+ * @file DeviceContext.h
+ * @brief Declaración de la clase DeviceContext.
+ */
+
 #pragma once
 #include "Prerequisites.h"
 
-/**
- * @class DeviceContext
- * @brief Encapsula el contexto de dispositivo de Direct3D 11.
- *
- * Esta clase es responsable de emitir comandos gráficos al pipeline:
- * establecer vistas, limpiar buffers, y controlar los estados del render.
- * Cada frame puede tener múltiples llamadas desde este contexto para definir el comportamiento gráfico.
- */
+ /**
+  * @class DeviceContext
+  * @brief Encapsula el contexto de dispositivo de Direct3D 11.
+  *
+  * Esta clase es responsable de emitir comandos gráficos al pipeline:
+  * establecer vistas, limpiar buffers, y controlar los estados del render.
+  * Cada frame puede tener múltiples llamadas desde este contexto para definir el comportamiento gráfico.
+  */
 class DeviceContext {
 public:
-     /**
-      * @brief Constructor por defecto.
-      */
+    /**
+     * @brief Constructor por defecto.
+     */
     DeviceContext() = default;
 
     /**
@@ -83,10 +88,10 @@ public:
         ID3D11DepthStencilView* pDepthStencilView);
 
 public:
-     /**
-      * @brief Contexto de dispositivo de Direct3D.
-      *
-      * Este puntero permite emitir comandos gráficos al pipeline, como establecer buffers o dibujar geometría.
-      */
+    /**
+     * @brief Contexto de dispositivo de Direct3D.
+     *
+     * Este puntero permite emitir comandos gráficos al pipeline, como establecer buffers o dibujar geometría.
+     */
     ID3D11DeviceContext* m_deviceContext = nullptr;
 };

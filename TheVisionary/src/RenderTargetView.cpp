@@ -28,9 +28,7 @@ HRESULT RenderTargetView::init(Device& device, Texture& backBuffer, DXGI_FORMAT 
     desc.Format = Format;
     desc.ViewDimension = D3D11_RTV_DIMENSION_TEXTURE2DMS;
 
-    HRESULT hr = device.m_device->CreateRenderTargetView(backBuffer.m_texture,
-        &desc,
-        &m_renderTargetView);
+    HRESULT hr = device.m_device->CreateRenderTargetView(backBuffer.m_texture, &desc, &m_renderTargetView);
     if (FAILED(hr)) {
         ERROR("RenderTargetView", "init",
             ("Failed to create render target view. HRESULT: " + std::to_string(hr)).c_str());
@@ -62,9 +60,7 @@ HRESULT RenderTargetView::init(Device& device,
     desc.Format = Format;
     desc.ViewDimension = ViewDimension;
 
-    HRESULT hr = device.m_device->CreateRenderTargetView(inTex.m_texture,
-        &desc,
-        &m_renderTargetView);
+    HRESULT hr = device.m_device->CreateRenderTargetView(inTex.m_texture, &desc, &m_renderTargetView);
     if (FAILED(hr)) {
         ERROR("RenderTargetView", "init",
             ("Failed to create render target view. HRESULT: " + std::to_string(hr)).c_str());

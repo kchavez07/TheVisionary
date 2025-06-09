@@ -20,30 +20,42 @@ class Texture;
 /// para habilitar el z-buffering y operaciones de stencil en la escena.
 class DepthStencilView {
 public:
-	/// Constructor por defecto
+	/// @brief Constructor por defecto.
 	DepthStencilView() = default;
 
-	/// Destructor por defecto
+	/// @brief Destructor por defecto.
 	~DepthStencilView() = default;
 
-	/// @brief Inicializa la vista de profundidad y stencil a partir de una textura.
-	/// @param device Referencia al dispositivo de DirectX.
-	/// @param depthStencil Textura sobre la que se creará la vista de profundidad/stencil.
-	/// @param format Formato de la vista, usualmente DXGI_FORMAT_D24_UNORM_S8_UINT.
-	/// @return HRESULT indicando el estado del proceso (S_OK si fue exitoso).
+	/**
+	 * @brief Inicializa la vista de profundidad y stencil a partir de una textura.
+	 *
+	 * @param device Referencia al dispositivo de DirectX.
+	 * @param depthStencil Textura sobre la que se creará la vista de profundidad/stencil.
+	 * @param format Formato de la vista, usualmente DXGI_FORMAT_D24_UNORM_S8_UINT.
+	 * @return HRESULT indicando el estado del proceso (S_OK si fue exitoso).
+	 */
 	HRESULT init(Device& device, Texture& depthStencil, DXGI_FORMAT format);
 
-	/// @brief Método de actualización por cuadro (vacío por ahora).
+	/**
+	 * @brief Método de actualización por cuadro (vacío por ahora).
+	 */
 	void update();
 
-	/// @brief Limpia y activa la DepthStencilView en el pipeline.
-	/// @param deviceContext Contexto del dispositivo utilizado para emitir comandos de render.
+	/**
+	 * @brief Limpia y activa la DepthStencilView en el pipeline.
+	 *
+	 * @param deviceContext Contexto del dispositivo utilizado para emitir comandos de render.
+	 */
 	void render(DeviceContext& deviceContext);
 
-	/// @brief Libera los recursos asociados a la DepthStencilView.
+	/**
+	 * @brief Libera los recursos asociados a la DepthStencilView.
+	 */
 	void destroy();
 
 public:
-	/// @brief Puntero a la interfaz ID3D11DepthStencilView de DirectX.
+	/**
+	 * @brief Puntero a la interfaz ID3D11DepthStencilView de DirectX.
+	 */
 	ID3D11DepthStencilView* m_depthStencilView = nullptr;
 };
