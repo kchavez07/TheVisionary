@@ -1,41 +1,65 @@
 #pragma once
 #include "Prerequisites.h"
 
-class
-	DeviceContext {
+// ==============================================
+// Clase: DeviceContext
+// Esta clase encapsula el contexto de dispositivo de Direct3D,
+// responsable de emitir comandos al pipeline gráfico como:
+// establecer vistas, limpiar buffers, y renderizar.
+// ==============================================
+class DeviceContext {
 public:
-	DeviceContext() = default;
-	~DeviceContext() = default;
+    DeviceContext() = default;
+    ~DeviceContext() = default;
 
-	void
-		init();
+    // Inicializa el contexto de dispositivo (si aplica lógica propia)
+    void init();
 
-	void
-		update();
+    // Método llamado por frame para lógica interna
+    void update();
 
-	void
-		render();
+    // Método principal de renderizado del contexto
+    void render();
 
-	void
-		destroy();
+    // Libera el recurso m_deviceContext
+    void destroy();
 
-	void
-		RSSetViewports(unsigned int NumViewports, const D3D11_VIEWPORT* pViewports);
+    // ==============================================
+    // MÉTODO: RSSetViewports
+    // Define las regiones de la pantalla donde se dibujará.
+    // Se puede usar para dividir la pantalla en múltiples áreas de renderizado.
+    // ==============================================
+    void RSSetViewports(unsigned int NumViewports, const D3D11_VIEWPORT* pViewports);
 
-	void
-		ClearDepthStencilView(ID3D11DepthStencilView* pDepthStencilView,
-			unsigned int ClearFlags,
-			float Depth,
-			UINT8 Stencil);
+    // ==============================================
+    // MÉTODO: ClearDepthStencilView
+    // Limpia el buffer de profundidad y/o stencil antes del renderizado de un nuevo frame.
+    // El parámetro ClearFlags indica si se limpia profundidad, stencil o ambos.
+    // ==============================================
+    void ClearDepthStencilView(ID3D11DepthStencilView* pDepthStencilView,
+        unsigned int ClearFlags,
+        float Depth,
+        UINT8 Stencil);
 
-	void
-		ClearRenderTargetView(ID3D11RenderTargetView* pRenderTargetView,
-			const float ColorRGBA[4]);
+    // ==============================================
+    // MÉTODO: ClearRenderTargetView
+    // Limpia el render target (por ejemplo el backbuffer) con un color definido por ColorRGBA.
+    // Se suele hacer al inicio de cada frame.
+    // ==============================================
+    void ClearRenderTargetView(ID3D11RenderTargetView* pRenderTargetView,
+        const float ColorRGBA[4]);
 
-	void
-		OMSetRenderTargets(unsigned int NumViews,
-			ID3D11RenderTargetView* const* ppRenderTargetViews,
-			ID3D11DepthStencilView* pDepthStencilView);
+    // ==============================================
+    // MÉTODO: OMSetRenderTargets
+    // Asocia uno o más render targets (color) y un depth stencil (profundidad)
+    // al pipeline de renderizado.
+    // Es obligatorio antes de dibujar algo.
+    // ==============================================
+    void OMSetRenderTargets(unsigned int NumViews,
+        ID3D11RenderTargetView* const* ppRenderTargetViews,
+        ID3D11DepthStencilView* pDepthStencilView);
+
 public:
-	ID3D11DeviceContext* m_deviceContext = nullptr;
+    // Puntero al contexto de dispositivo, usado para emitir comandos al pipeline gráfico
+    ID3D11DeviceContext* m_deviceContext = nullptr;
 };

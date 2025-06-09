@@ -1,55 +1,83 @@
 #pragma once
 #include "Prerequisites.h"
 
+// Forward declarations para evitar incluir headers innecesarios
 class Device;
 class DeviceContext;
 class Window;
 class Texture;
 
-class
-	SwapChain {
+// ============================================================================
+// Clase SwapChain
+// Encargada de manejar el mecanismo de presentación de imágenes en pantalla.
+// Una "swap chain" (cadena de intercambio) permite tener múltiples buffers
+// para dibujar en uno mientras otro se muestra, evitando parpadeos.
+// Esta clase también configura MSAA (antialiasing) y se conecta al backbuffer.
+// ============================================================================
+class SwapChain {
 public:
-	SwapChain() = default;
-	~SwapChain() = default;
+    // Constructor y destructor por defecto
+    SwapChain() = default;
+    ~SwapChain() = default;
 
-	HRESULT
-		init(Device& device,
-			DeviceContext& deviceContext,
-			Texture& backBuffer,
-			Window window);
+    // ==========================================================
+    // MÉTODO: init()
+    // Inicializa la swap chain junto con el dispositivo y el backbuffer.
+    // Configura MSAA y obtiene acceso a interfaces de DXGI.
+    // ==========================================================
+    HRESULT init(Device& device,
+        DeviceContext& deviceContext,
+        Texture& backBuffer,
+        Window window);
 
-	void
-		update();
+    // Placeholder para actualizaciones futuras
+    void update();
 
-	void
-		render();
+    // Placeholder para lógica de render interna si es necesaria
+    void render();
 
-	void
-		destroy();
+    // Libera todos los recursos asociados a la swap chain y sus interfaces DXGI
+    void destroy();
 
-	void
-		present();
+    // ==========================================================
+    // MÉTODO: present()
+    // Presenta el buffer actual en pantalla (swap front <-> back).
+    // Es el paso final del render loop.
+    // ==========================================================
+    void present();
 
 public:
-	IDXGISwapChain* m_swapChain = nullptr;
-	D3D_DRIVER_TYPE m_driverType = D3D_DRIVER_TYPE_NULL;
+    // ==========================================================
+    // Puntero a la swap chain de DXGI
+    // Esta cadena permite manejar los buffers de presentación.
+    // ==========================================================
+    IDXGISwapChain* m_swapChain = nullptr;
+
+    // Tipo de driver utilizado (hardware, WARP o referencia)
+    D3D_DRIVER_TYPE m_driverType = D3D_DRIVER_TYPE_NULL;
+
 private:
-	D3D_FEATURE_LEVEL m_featureLevel = D3D_FEATURE_LEVEL_11_0;
-	// MSAA Configuration
-	/*
-	 * Para evitar que los píxeles se vean con un efecto de "serrucho" (aliasing) en DirectX 11 con C++,
-	 * se puede utilizar una técnica llamada anti-aliasing.
-	 *
-	 * Multisample Anti-Aliasing (MSAA)
-	 * MSAA es una técnica que suaviza los bordes de los objetos al muestrear varios puntos por píxel.
-	 * Para habilitar MSAA en DirectX 11:
-	 *
-	 */
-	unsigned int m_sampleCount;  // Number of MSAA samples (4x MSAA)
-	unsigned int m_qualityLevels;
+    // ==========================================================
+    // Nivel de características de DirectX soportado por el hardware
+    // ==========================================================
+    D3D_FEATURE_LEVEL m_featureLevel = D3D_FEATURE_LEVEL_11_0;
 
-	// Punteros a las interfaces DXGI
-	IDXGIDevice* m_dxgiDevice = nullptr;
-	IDXGIAdapter* m_dxgiAdapter = nullptr;
-	IDXGIFactory* m_dxgiFactory = nullptr;
+    // ==========================================================
+    // Configuración de anti-aliasing (MSAA)
+    //
+    // sampleCount: número de muestras por píxel (típicamente 4 para 4xMSAA)
+    // qualityLevels: calidad permitida por el hardware para ese número de muestras
+    //
+    // El MSAA ayuda a suavizar los bordes en objetos 3D.
+    // ==========================================================
+    unsigned int m_sampleCount;
+    unsigned int m_qualityLevels;
+
+    // ==========================================================
+    // Interfaces internas de DXGI
+    // Estas se obtienen a partir del dispositivo para crear la swap chain
+    // ==========================================================
+    IDXGIDevice* m_dxgiDevice = nullptr;
+    IDXGIAdapter* m_dxgiAdapter = nullptr;
+    IDXGIFactory* m_dxgiFactory = nullptr;
 };
