@@ -1,65 +1,92 @@
 #pragma once
 #include "Prerequisites.h"
 
-// ==============================================
-// Clase: DeviceContext
-// Esta clase encapsula el contexto de dispositivo de Direct3D,
-// responsable de emitir comandos al pipeline gráfico como:
-// establecer vistas, limpiar buffers, y renderizar.
-// ==============================================
+/**
+ * @class DeviceContext
+ * @brief Encapsula el contexto de dispositivo de Direct3D 11.
+ *
+ * Esta clase es responsable de emitir comandos gráficos al pipeline:
+ * establecer vistas, limpiar buffers, y controlar los estados del render.
+ * Cada frame puede tener múltiples llamadas desde este contexto para definir el comportamiento gráfico.
+ */
 class DeviceContext {
 public:
+     /**
+      * @brief Constructor por defecto.
+      */
     DeviceContext() = default;
+
+    /**
+     * @brief Destructor por defecto.
+     */
     ~DeviceContext() = default;
 
-    // Inicializa el contexto de dispositivo (si aplica lógica propia)
+    /**
+     * @brief Inicializa el contexto de dispositivo (placeholder).
+     */
     void init();
 
-    // Método llamado por frame para lógica interna
+    /**
+     * @brief Actualización por cuadro (placeholder para lógica futura).
+     */
     void update();
 
-    // Método principal de renderizado del contexto
+    /**
+     * @brief Método principal de render. Placeholder para emitir comandos de dibujo.
+     */
     void render();
 
-    // Libera el recurso m_deviceContext
+    /**
+     * @brief Libera el contexto de dispositivo asociado.
+     */
     void destroy();
 
-    // ==============================================
-    // MÉTODO: RSSetViewports
-    // Define las regiones de la pantalla donde se dibujará.
-    // Se puede usar para dividir la pantalla en múltiples áreas de renderizado.
-    // ==============================================
+    /**
+     * @brief Establece una o varias regiones de pantalla donde se renderizará.
+     *
+     * @param NumViewports Número de viewports a establecer.
+     * @param pViewports Arreglo de estructuras D3D11_VIEWPORT con la información de cada región.
+     */
     void RSSetViewports(unsigned int NumViewports, const D3D11_VIEWPORT* pViewports);
 
-    // ==============================================
-    // MÉTODO: ClearDepthStencilView
-    // Limpia el buffer de profundidad y/o stencil antes del renderizado de un nuevo frame.
-    // El parámetro ClearFlags indica si se limpia profundidad, stencil o ambos.
-    // ==============================================
+    /**
+     * @brief Limpia el buffer de profundidad y/o stencil.
+     *
+     * @param pDepthStencilView Vista de profundidad a limpiar.
+     * @param ClearFlags Flags para definir si se limpia la profundidad, el stencil o ambos.
+     * @param Depth Valor de profundidad a asignar.
+     * @param Stencil Valor del stencil a asignar.
+     */
     void ClearDepthStencilView(ID3D11DepthStencilView* pDepthStencilView,
         unsigned int ClearFlags,
         float Depth,
         UINT8 Stencil);
 
-    // ==============================================
-    // MÉTODO: ClearRenderTargetView
-    // Limpia el render target (por ejemplo el backbuffer) con un color definido por ColorRGBA.
-    // Se suele hacer al inicio de cada frame.
-    // ==============================================
+    /**
+     * @brief Limpia la vista de render con un color determinado.
+     *
+     * @param pRenderTargetView Vista de render target (por ejemplo, el backbuffer).
+     * @param ColorRGBA Color en formato RGBA que se usará para limpiar.
+     */
     void ClearRenderTargetView(ID3D11RenderTargetView* pRenderTargetView,
         const float ColorRGBA[4]);
 
-    // ==============================================
-    // MÉTODO: OMSetRenderTargets
-    // Asocia uno o más render targets (color) y un depth stencil (profundidad)
-    // al pipeline de renderizado.
-    // Es obligatorio antes de dibujar algo.
-    // ==============================================
+    /**
+     * @brief Asocia render targets y un depth stencil al pipeline.
+     *
+     * @param NumViews Número de render targets.
+     * @param ppRenderTargetViews Arreglo de punteros a vistas de render.
+     * @param pDepthStencilView Vista de profundidad a usar.
+     */
     void OMSetRenderTargets(unsigned int NumViews,
         ID3D11RenderTargetView* const* ppRenderTargetViews,
         ID3D11DepthStencilView* pDepthStencilView);
 
 public:
-    // Puntero al contexto de dispositivo, usado para emitir comandos al pipeline gráfico
+     /**
+      * @brief Contexto de dispositivo de Direct3D.
+      *
+      * Este puntero permite emitir comandos gráficos al pipeline, como establecer buffers o dibujar geometría.
+      */
     ID3D11DeviceContext* m_deviceContext = nullptr;
 };

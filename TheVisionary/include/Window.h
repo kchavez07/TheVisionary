@@ -1,68 +1,89 @@
 #pragma once
 #include "Prerequisites.h"
 
-// ===========================================================
-// CLASE: Window
-// Esta clase se encarga de crear y manejar la ventana principal
-// del motor gráfico, utilizando las funciones de la WinAPI.
-// También guarda las dimensiones y el nombre de la ventana.
-// ===========================================================
+/**
+ * @file Window.h
+ * @class Window
+ * @brief Clase encargada de crear y manejar la ventana principal del motor gráfico usando WinAPI.
+ *
+ * Esta clase encapsula la creación, actualización y destrucción de la ventana.
+ * También proporciona acceso a las dimensiones del área de cliente y al handle (HWND).
+ */
 class Window {
 public:
-	// Constructor por defecto
+	/**
+	 * @brief Constructor por defecto.
+	 */
 	Window() = default;
 
-	// Destructor por defecto
+	/**
+	 * @brief Destructor por defecto.
+	 */
 	~Window() = default;
 
-	// =======================================================
-	// MÉTODO: init()
-	// Inicializa y crea la ventana de Windows usando WinAPI.
-	// Recibe:
-	// - hInstance: instancia del programa (la da WinMain)
-	// - nCmdShow: modo de visualización de la ventana (normal, minimizada, etc.)
-	// - wndproc: función de callback para manejar los mensajes de Windows (eventos)
-	// =======================================================
+	/**
+	 * @brief Inicializa y crea la ventana de Windows.
+	 *
+	 * @param hInstance Instancia del programa proporcionada por WinMain.
+	 * @param nCmdShow Bandera que indica cómo se debe mostrar la ventana (normal, minimizada, etc.).
+	 * @param wndproc Función de callback para el procesamiento de mensajes (eventos) del sistema.
+	 * @return HRESULT Código de resultado de éxito o error.
+	 */
 	HRESULT init(HINSTANCE hInstance, int nCmdShow, WNDPROC wndproc);
 
-	// =======================================================
-	// MÉTODO: update()
-	// Método de actualización por frame (aún sin lógica).
-	// Podría usarse para procesar eventos personalizados.
-	// =======================================================
+	/**
+	 * @brief Método de actualización por frame (actualmente vacío).
+	 *
+	 * Se puede utilizar más adelante para lógica personalizada o polling de eventos.
+	 */
 	void update();
 
-	// =======================================================
-	// MÉTODO: render()
-	// Método para lógica de renderizado (no se usa directamente
-	// porque DX11 dibuja con el contexto de dispositivo).
-	// =======================================================
+	/**
+	 * @brief Método de renderizado asociado a la ventana (actualmente no implementado).
+	 *
+	 * Nota: El renderizado principal se realiza desde el contexto gráfico (DeviceContext).
+	 */
 	void render();
 
-	// =======================================================
-	// MÉTODO: destroy()
-	// Libera los recursos asociados a la ventana.
-	// Es una buena práctica llamarlo antes de cerrar la app.
-	// =======================================================
+	/**
+	 * @brief Libera recursos asociados a la ventana.
+	 *
+	 * Es recomendable llamarlo antes de cerrar la aplicación para evitar fugas.
+	 */
 	void destroy();
 
-public:
-	// Handle (identificador) de la ventana WinAPI
-	// Este valor es requerido por casi todas las funciones de Win32.
+	/**
+	 * @brief Handle (identificador) de la ventana WinAPI.
+	 *
+	 * Este valor es requerido por casi todas las funciones relacionadas con ventanas en Win32.
+	 */
 	HWND m_hWnd = nullptr;
 
-	// Ancho y alto del área visible de la ventana (cliente)
+	/**
+	 * @brief Ancho del área cliente (interior) de la ventana.
+	 */
 	unsigned int m_width;
+
+	/**
+	 * @brief Alto del área cliente (interior) de la ventana.
+	 */
 	unsigned int m_height;
 
 private:
-	// Instancia del programa (WinMain la proporciona)
-	// Necesaria para varias llamadas a funciones WinAPI.
+	/**
+	 * @brief Instancia de la aplicación WinAPI.
+	 *
+	 * Es provista por WinMain y necesaria para funciones como CreateWindow o LoadIcon.
+	 */
 	HINSTANCE m_hInst = nullptr;
 
-	// Estructura RECT con las dimensiones de la ventana.
+	/**
+	 * @brief Rectángulo que representa las dimensiones internas de la ventana.
+	 */
 	RECT m_rect;
 
-	// Nombre de la ventana (aparece en la barra de título)
+	/**
+	 * @brief Nombre o título que se muestra en la barra de la ventana.
+	 */
 	std::string m_windowName = "The Visionary Engine";
 };

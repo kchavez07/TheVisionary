@@ -1,142 +1,171 @@
 #pragma once
 #include "Prerequisites.h"
 
-//--------------------------------------------------------------
-// Clase Device
-// Encapsula el dispositivo de Direct3D (ID3D11Device)
-// Esta clase es fundamental para crear todos los recursos gráficos
-// que necesita el motor, como texturas, buffers, shaders, estados, etc.
-//--------------------------------------------------------------
+/**
+ * @class Device
+ * @brief Encapsula el dispositivo principal de Direct3D (ID3D11Device).
+ *
+ * Esta clase es esencial para la creación de recursos gráficos como shaders,
+ * texturas, buffers, estados y vistas. Su propósito es centralizar todas
+ * las llamadas al API para generar recursos del motor.
+ */
 class Device {
 public:
-    // Constructor por defecto (no hace nada de momento)
+     /**
+      * @brief Constructor por defecto.
+      */
     Device() = default;
 
-    // Destructor por defecto (la limpieza se hace manualmente con destroy)
+    /**
+     * @brief Destructor por defecto.
+     */
     ~Device() = default;
 
-    // ==========================================================
-    // MÉTODO: init()
-    // Inicializa el dispositivo si se necesita lógica adicional.
-    // Actualmente es un placeholder para extender más adelante.
-    // ==========================================================
+    /**
+     * @brief Inicializa el dispositivo si se requiere lógica adicional.
+     */
     void init();
 
-    // ==========================================================
-    // MÉTODO: update()
-    // Lógica de actualización del dispositivo si llegara a ser necesaria.
-    // No se usa comúnmente, pero puede ser útil en ciertos casos.
-    // ==========================================================
+    /**
+     * @brief Actualiza el dispositivo (placeholder).
+     */
     void update();
 
-    // ==========================================================
-    // MÉTODO: render()
-    // Si el dispositivo necesita lógica de render, se puede colocar aquí.
-    // Por lo general, esta función se usa más en la clase DeviceContext.
-    // ==========================================================
+    /**
+     * @brief Renderiza el dispositivo (placeholder).
+     */
     void render();
 
-    // ==========================================================
-    // MÉTODO: destroy()
-    // Libera el dispositivo de Direct3D y evita fugas de memoria.
-    // Se debe llamar al final del ciclo de vida del motor.
-    // ==========================================================
+    /**
+     * @brief Libera los recursos asociados al dispositivo.
+     */
     void destroy();
 
-    // ==========================================================
-    // MÉTODO: CreateRenderTargetView()
-    // Crea una vista para dibujar en una textura (por lo general, el backbuffer).
-    // ==========================================================
+    /**
+     * @brief Crea una vista de renderizado desde un recurso.
+     * @param pResource Recurso base (como textura).
+     * @param pDesc Descripción de la vista.
+     * @param ppRTView Resultado: puntero a la vista creada.
+     * @return HRESULT Código de éxito o error.
+     */
     HRESULT CreateRenderTargetView(ID3D11Resource* pResource,
         const D3D11_RENDER_TARGET_VIEW_DESC* pDesc,
         ID3D11RenderTargetView** ppRTView);
 
-    // ==========================================================
-    // MÉTODO: CreateTexture2D()
-    // Crea una textura 2D que puede usarse como recurso visual o superficie de dibujo.
-    // ==========================================================
+    /**
+     * @brief Crea una textura 2D.
+     * @param pDesc Descripción de la textura.
+     * @param pInitialData Datos iniciales (opcional).
+     * @param ppTexture2D Resultado: puntero a la textura creada.
+     * @return HRESULT Código de éxito o error.
+     */
     HRESULT CreateTexture2D(const D3D11_TEXTURE2D_DESC* pDesc,
         const D3D11_SUBRESOURCE_DATA* pInitialData,
         ID3D11Texture2D** ppTexture2D);
 
-    // ==========================================================
-    // MÉTODO: CreateDepthStencilView()
-    // Crea una vista de profundidad/stencil, necesaria para controlar qué se dibuja delante/detrás.
-    // ==========================================================
+    /**
+     * @brief Crea una vista de profundidad y stencil.
+     * @param pResource Recurso base (textura con soporte de profundidad).
+     * @param pDesc Descripción de la vista.
+     * @param ppDepthStencilView Resultado: puntero a la vista creada.
+     * @return HRESULT Código de éxito o error.
+     */
     HRESULT CreateDepthStencilView(ID3D11Resource* pResource,
         const D3D11_DEPTH_STENCIL_VIEW_DESC* pDesc,
         ID3D11DepthStencilView** ppDepthStencilView);
 
-    // ==========================================================
-    // MÉTODO: CreateVertexShader()
-    // Crea un shader de vértices (transformaciones y datos de entrada).
-    // ==========================================================
+    /**
+     * @brief Crea un shader de vértices.
+     * @param pShaderBytecode Bytecode del shader.
+     * @param BytecodeLength Tamaño del bytecode.
+     * @param pClassLinkage Opcional: soporte para herencia de shaders.
+     * @param ppVertexShader Resultado: puntero al shader creado.
+     * @return HRESULT Código de éxito o error.
+     */
     HRESULT CreateVertexShader(const void* pShaderBytecode,
         unsigned int BytecodeLength,
         ID3D11ClassLinkage* pClassLinkage,
         ID3D11VertexShader** ppVertexShader);
 
-    // ==========================================================
-    // MÉTODO: CreateInputLayout()
-    // Asocia la estructura de los vértices con el shader de vértices.
-    // Sin esto, los datos no se pueden interpretar correctamente.
-    // ==========================================================
+    /**
+     * @brief Crea un Input Layout para definir cómo se leen los vértices.
+     * @param pInputElementDescs Descripción del layout.
+     * @param NumElements Número de elementos en el layout.
+     * @param pShaderBytecodeWithInputSignature Bytecode con firma de entrada.
+     * @param BytecodeLength Tamaño del bytecode.
+     * @param ppInputLayout Resultado: puntero al layout creado.
+     * @return HRESULT Código de éxito o error.
+     */
     HRESULT CreateInputLayout(const D3D11_INPUT_ELEMENT_DESC* pInputElementDescs,
         unsigned int NumElements,
         const void* pShaderBytecodeWithInputSignature,
         unsigned int BytecodeLength,
         ID3D11InputLayout** ppInputLayout);
 
-    // ==========================================================
-    // MÉTODO: CreatePixelShader()
-    // Crea un shader de píxeles (última etapa del pipeline, define color final).
-    // ==========================================================
+    /**
+     * @brief Crea un shader de píxeles.
+     * @param pShaderBytecode Bytecode del shader.
+     * @param BytecodeLength Tamaño del bytecode.
+     * @param pClassLinkage Opcional: soporte para herencia de shaders.
+     * @param ppPixelShader Resultado: puntero al shader creado.
+     * @return HRESULT Código de éxito o error.
+     */
     HRESULT CreatePixelShader(const void* pShaderBytecode,
         unsigned int BytecodeLength,
         ID3D11ClassLinkage* pClassLinkage,
         ID3D11PixelShader** ppPixelShader);
 
-    // ==========================================================
-    // MÉTODO: CreateBuffer()
-    // Crea un buffer genérico (puede ser vertex buffer, index buffer o constant buffer).
-    // ==========================================================
+    /**
+     * @brief Crea un buffer (vertex, index o constant).
+     * @param pDesc Descripción del buffer.
+     * @param pInitialData Datos iniciales (opcional).
+     * @param ppBuffer Resultado: puntero al buffer creado.
+     * @return HRESULT Código de éxito o error.
+     */
     HRESULT CreateBuffer(const D3D11_BUFFER_DESC* pDesc,
         const D3D11_SUBRESOURCE_DATA* pInitialData,
         ID3D11Buffer** ppBuffer);
 
-    // ==========================================================
-    // MÉTODO: CreateSamplerState()
-    // Define cómo se muestrean las texturas (filtrado, wrap, etc.).
-    // ==========================================================
+    /**
+     * @brief Crea un Sampler State (modo de muestreo para texturas).
+     * @param pSamplerDesc Descripción del muestreo.
+     * @param ppSamplerState Resultado: puntero al estado creado.
+     * @return HRESULT Código de éxito o error.
+     */
     HRESULT CreateSamplerState(const D3D11_SAMPLER_DESC* pSamplerDesc,
         ID3D11SamplerState** ppSamplerState);
 
-    // ==========================================================
-    // MÉTODO: CreateBlendState()
-    // Crea un estado de mezcla para manejar transparencia y combinación de colores.
-    // ==========================================================
+    /**
+     * @brief Crea un Blend State (modo de mezcla para transparencia).
+     * @param pBlendStateDesc Descripción de la mezcla.
+     * @param ppBlendState Resultado: puntero al estado creado.
+     * @return HRESULT Código de éxito o error.
+     */
     HRESULT CreateBlendState(const D3D11_BLEND_DESC* pBlendStateDesc,
         ID3D11BlendState** ppBlendState);
 
-    // ==========================================================
-    // MÉTODO: CreateDepthStencilState()
-    // Crea un estado de profundidad/stencil (comparaciones, máscaras, etc.).
-    // ==========================================================
+    /**
+     * @brief Crea un Depth Stencil State (modo de pruebas de profundidad).
+     * @param pDepthStencilDesc Descripción del estado.
+     * @param ppDepthStencilState Resultado: puntero al estado creado.
+     * @return HRESULT Código de éxito o error.
+     */
     HRESULT CreateDepthStencilState(const D3D11_DEPTH_STENCIL_DESC* pDepthStencilDesc,
         ID3D11DepthStencilState** ppDepthStencilState);
 
-    // ==========================================================
-    // MÉTODO: CreateRasterizerState()
-    // Define cómo se dibujan los triángulos: relleno, líneas, orientación, etc.
-    // ==========================================================
+    /**
+     * @brief Crea un Rasterizer State (modo de dibujo de triángulos).
+     * @param pRasterizerDesc Descripción del rasterizado.
+     * @param ppRasterizerState Resultado: puntero al estado creado.
+     * @return HRESULT Código de éxito o error.
+     */
     HRESULT CreateRasterizerState(const D3D11_RASTERIZER_DESC* pRasterizerDesc,
         ID3D11RasterizerState** ppRasterizerState);
 
-public:
-    // ==========================================================
-    // Variable: m_device
-    // El dispositivo de Direct3D. Se usa para crear todos los recursos.
-    // Es uno de los objetos más importantes del motor.
-    // ==========================================================
+     /**
+      * @brief Puntero al dispositivo de Direct3D.
+      *
+      * Se utiliza para crear todos los recursos gráficos del motor.
+      */
     ID3D11Device* m_device = nullptr;
 };

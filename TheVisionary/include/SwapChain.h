@@ -1,82 +1,105 @@
 #pragma once
 #include "Prerequisites.h"
 
-// Forward declarations para evitar incluir headers innecesarios
+// Forward declarations para evitar dependencias circulares o inclusiones innecesarias
 class Device;
 class DeviceContext;
 class Window;
 class Texture;
 
-// ============================================================================
-// Clase SwapChain
-// Encargada de manejar el mecanismo de presentación de imágenes en pantalla.
-// Una "swap chain" (cadena de intercambio) permite tener múltiples buffers
-// para dibujar en uno mientras otro se muestra, evitando parpadeos.
-// Esta clase también configura MSAA (antialiasing) y se conecta al backbuffer.
-// ============================================================================
+/**
+ * @class SwapChain
+ * @brief Maneja la presentación de imágenes en pantalla mediante buffers intercambiables.
+ *
+ * La clase SwapChain representa la cadena de intercambio (backbuffer y frontbuffer),
+ * utilizada para renderizar en un buffer mientras se muestra el otro. También configura
+ * características como MSAA (antialiasing) y obtiene interfaces internas de DXGI.
+ */
 class SwapChain {
 public:
-    // Constructor y destructor por defecto
+     /**
+      * @brief Constructor por defecto.
+      */
     SwapChain() = default;
+
+    /**
+     * @brief Destructor por defecto.
+     */
     ~SwapChain() = default;
 
-    // ==========================================================
-    // MÉTODO: init()
-    // Inicializa la swap chain junto con el dispositivo y el backbuffer.
-    // Configura MSAA y obtiene acceso a interfaces de DXGI.
-    // ==========================================================
+    /**
+     * @brief Inicializa la swap chain y sus interfaces relacionadas.
+     *
+     * @param device Referencia al dispositivo de Direct3D.
+     * @param deviceContext Contexto del dispositivo.
+     * @param backBuffer Textura que actuará como backbuffer.
+     * @param window Ventana donde se mostrará el contenido.
+     * @return HRESULT Código de éxito o error.
+     */
     HRESULT init(Device& device,
         DeviceContext& deviceContext,
         Texture& backBuffer,
         Window window);
 
-    // Placeholder para actualizaciones futuras
+    /**
+     * @brief Método de actualización. Placeholder para lógica futura.
+     */
     void update();
 
-    // Placeholder para lógica de render interna si es necesaria
+    /**
+     * @brief Método de render. Placeholder para lógica futura.
+     */
     void render();
 
-    // Libera todos los recursos asociados a la swap chain y sus interfaces DXGI
+    /**
+     * @brief Libera todos los recursos e interfaces de DXGI utilizados.
+     */
     void destroy();
 
-    // ==========================================================
-    // MÉTODO: present()
-    // Presenta el buffer actual en pantalla (swap front <-> back).
-    // Es el paso final del render loop.
-    // ==========================================================
+    /**
+     * @brief Presenta el contenido renderizado en pantalla (swap buffers).
+     */
     void present();
 
-public:
-    // ==========================================================
-    // Puntero a la swap chain de DXGI
-    // Esta cadena permite manejar los buffers de presentación.
-    // ==========================================================
+    /** =======================
+     *  ATRIBUTOS PÚBLICOS
+     *  ======================= */
+
+     /**
+      * @brief Puntero principal a la cadena de intercambio de DXGI.
+      *
+      * Utilizado para presentar el contenido en la ventana.
+      */
     IDXGISwapChain* m_swapChain = nullptr;
 
-    // Tipo de driver utilizado (hardware, WARP o referencia)
+    /**
+     * @brief Tipo de driver seleccionado para el dispositivo (hardware, WARP, referencia).
+     */
     D3D_DRIVER_TYPE m_driverType = D3D_DRIVER_TYPE_NULL;
 
 private:
-    // ==========================================================
-    // Nivel de características de DirectX soportado por el hardware
-    // ==========================================================
+     /**
+      * @brief Nivel de características de DirectX soportado por el dispositivo.
+      */
     D3D_FEATURE_LEVEL m_featureLevel = D3D_FEATURE_LEVEL_11_0;
 
-    // ==========================================================
-    // Configuración de anti-aliasing (MSAA)
-    //
-    // sampleCount: número de muestras por píxel (típicamente 4 para 4xMSAA)
-    // qualityLevels: calidad permitida por el hardware para ese número de muestras
-    //
-    // El MSAA ayuda a suavizar los bordes en objetos 3D.
-    // ==========================================================
+    /**
+     * @brief Número de muestras para MSAA (antialiasing).
+     *
+     * Mejora visual al suavizar bordes en objetos renderizados.
+     */
     unsigned int m_sampleCount;
+
+    /**
+     * @brief Número de niveles de calidad disponibles para MSAA según el hardware.
+     */
     unsigned int m_qualityLevels;
 
-    // ==========================================================
-    // Interfaces internas de DXGI
-    // Estas se obtienen a partir del dispositivo para crear la swap chain
-    // ==========================================================
+    /**
+     * @brief Interfaces internas de DXGI necesarias para crear la swap chain.
+     *
+     * Se obtienen a través del dispositivo.
+     */
     IDXGIDevice* m_dxgiDevice = nullptr;
     IDXGIAdapter* m_dxgiAdapter = nullptr;
     IDXGIFactory* m_dxgiFactory = nullptr;

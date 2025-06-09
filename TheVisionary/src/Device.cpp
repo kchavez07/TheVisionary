@@ -1,20 +1,15 @@
+/**
+ * @file Device.cpp
+ * @brief Implementación de la clase Device.
+ */
+
 #include "Device.h"
 
-// ==============================================
-// MÉTODO: destroy()
-// Libera el recurso del dispositivo Direct3D si fue creado.
-// Es buena práctica para evitar fugas de memoria.
-// ==============================================
 void
 Device::destroy() {
     SAFE_RELEASE(m_device);
 }
 
-// ==============================================
-// MÉTODO: CreateRenderTargetView()
-// Crea una vista de renderizado a partir de una textura o recurso.
-// Esta vista se usará como objetivo de dibujo (por ejemplo, el backbuffer).
-// ==============================================
 HRESULT
 Device::CreateRenderTargetView(ID3D11Resource* pResource,
     const D3D11_RENDER_TARGET_VIEW_DESC* pDesc,
@@ -40,11 +35,6 @@ Device::CreateRenderTargetView(ID3D11Resource* pResource,
     return hr;
 }
 
-// ==============================================
-// MÉTODO: CreateTexture2D()
-// Crea una textura 2D, puede ser utilizada como superficie de render
-// o como recurso que será mapeado a modelos 3D.
-// ==============================================
 HRESULT
 Device::CreateTexture2D(const D3D11_TEXTURE2D_DESC* pDesc,
     const D3D11_SUBRESOURCE_DATA* pInitialData,
@@ -70,11 +60,6 @@ Device::CreateTexture2D(const D3D11_TEXTURE2D_DESC* pDesc,
     return hr;
 }
 
-// ==============================================
-// MÉTODO: CreateDepthStencilView()
-// Crea una vista para buffer de profundidad y stencil.
-// Usado para pruebas de profundidad en el pipeline de render.
-// ==============================================
 HRESULT
 Device::CreateDepthStencilView(ID3D11Resource* pResource,
     const D3D11_DEPTH_STENCIL_VIEW_DESC* pDesc,
@@ -100,11 +85,6 @@ Device::CreateDepthStencilView(ID3D11Resource* pResource,
     return hr;
 }
 
-// ==============================================
-// MÉTODO: CreateVertexShader()
-// Crea un shader de vértices desde un bytecode compilado.
-// Se utiliza para transformar vértices antes de rasterizar.
-// ==============================================
 HRESULT
 Device::CreateVertexShader(const void* pShaderBytecode,
     unsigned int BytecodeLength,
@@ -131,11 +111,6 @@ Device::CreateVertexShader(const void* pShaderBytecode,
     return hr;
 }
 
-// ==============================================
-// MÉTODO: CreateInputLayout()
-// Define cómo están organizados los datos de entrada (vértices).
-// Necesario para que el vertex shader entienda la estructura de cada vértice.
-// ==============================================
 HRESULT
 Device::CreateInputLayout(const D3D11_INPUT_ELEMENT_DESC* pInputElementDescs,
     unsigned int NumElements,
@@ -163,11 +138,6 @@ Device::CreateInputLayout(const D3D11_INPUT_ELEMENT_DESC* pInputElementDescs,
     return hr;
 }
 
-// ==============================================
-// MÉTODO: CreatePixelShader()
-// Crea el shader de píxel, que determina el color final de cada fragmento.
-// Es el último paso antes de presentar en pantalla.
-// ==============================================
 HRESULT
 Device::CreatePixelShader(const void* pShaderBytecode,
     unsigned int BytecodeLength,
@@ -194,11 +164,6 @@ Device::CreatePixelShader(const void* pShaderBytecode,
     return hr;
 }
 
-// ==============================================
-// MÉTODO: CreateSamplerState()
-// Crea una configuración de muestreo para texturas.
-// Define cómo se comportan los filtros al aplicar texturas (anisotrópico, linear, etc.).
-// ==============================================
 HRESULT
 Device::CreateSamplerState(const D3D11_SAMPLER_DESC* pSamplerDesc,
     ID3D11SamplerState** ppSamplerState) {
@@ -223,11 +188,6 @@ Device::CreateSamplerState(const D3D11_SAMPLER_DESC* pSamplerDesc,
     return hr;
 }
 
-// ==============================================
-// MÉTODO: CreateBuffer()
-// Crea un buffer para vértices, índices o constantes.
-// Los buffers son esenciales para enviar datos a los shaders.
-// ==============================================
 HRESULT
 Device::CreateBuffer(const D3D11_BUFFER_DESC* pDesc,
     const D3D11_SUBRESOURCE_DATA* pInitialData,
@@ -253,11 +213,6 @@ Device::CreateBuffer(const D3D11_BUFFER_DESC* pDesc,
     return hr;
 }
 
-// ==============================================
-// MÉTODO: CreateBlendState()
-// Permite configurar mezclas entre colores (por ejemplo: transparencia).
-// Fundamental para efectos visuales como transparencias o blending.
-// ==============================================
 HRESULT
 Device::CreateBlendState(const D3D11_BLEND_DESC* pBlendStateDesc,
     ID3D11BlendState** ppBlendState) {
@@ -282,11 +237,6 @@ Device::CreateBlendState(const D3D11_BLEND_DESC* pBlendStateDesc,
     return hr;
 }
 
-// ==============================================
-// MÉTODO: CreateDepthStencilState()
-// Define reglas para la prueba de profundidad (z-buffer) y stencil (máscara).
-// Útil para ocultar objetos que están detrás de otros en escena.
-// ==============================================
 HRESULT
 Device::CreateDepthStencilState(const D3D11_DEPTH_STENCIL_DESC* pDepthStencilDesc,
     ID3D11DepthStencilState** ppDepthStencilState) {
@@ -311,11 +261,6 @@ Device::CreateDepthStencilState(const D3D11_DEPTH_STENCIL_DESC* pDepthStencilDes
     return hr;
 }
 
-// ==============================================
-// MÉTODO: CreateRasterizerState()
-// Controla cómo se rasterizan los triángulos (relleno, wireframe, culling, etc.).
-// Esencial para definir estilo visual y eficiencia del render.
-// ==============================================
 HRESULT
 Device::CreateRasterizerState(const D3D11_RASTERIZER_DESC* pRasterizerDesc,
     ID3D11RasterizerState** ppRasterizerState) {

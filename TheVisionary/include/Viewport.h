@@ -1,61 +1,49 @@
 #pragma once
 #include "Prerequisites.h"
 
-// Forward declarations para evitar incluir headers innecesarios en este archivo
+/// @file Viewport.h
+/// @brief Define el área de renderizado (viewport) en DirectX 11.
+///
+/// El viewport indica en qué parte del render target (pantalla, textura)
+/// se debe dibujar. Es esencial para ajustar resolución, splitscreen, editores, etc.
+
+/// Forward declarations para evitar dependencias circulares innecesarias.
 class Window;
 class DeviceContext;
 
-// ========================================================
-// CLASE: Viewport
-// El Viewport define el área rectangular de la pantalla donde se dibujará.
-// Es como una "ventana de dibujo" dentro del backbuffer.
-// ========================================================
-class
-    Viewport {
+/// @class Viewport
+/// @brief Representa un viewport de Direct3D 11, que delimita el área visible de dibujo.
+class Viewport {
 public:
-    Viewport() = default;
-    ~Viewport() = default;
+	/// Constructor por defecto
+	Viewport() = default;
 
-    // ========================================================
-    // MÉTODO: init(Window&)
-    // Inicializa el viewport usando las dimensiones de la ventana.
-    // Normalmente se usa esta versión si ya tienes una instancia de Window.
-    // ========================================================
-    HRESULT
-        init(const Window& window);
+	/// Destructor por defecto
+	~Viewport() = default;
 
-    // ========================================================
-    // MÉTODO: init(width, height)
-    // Inicializa el viewport directamente con dimensiones específicas.
-    // Útil para viewports personalizados o en herramientas como editores.
-    // ========================================================
-    HRESULT
-        init(unsigned int width, unsigned int height);
+	/// @brief Inicializa el viewport usando las dimensiones de una ventana.
+	/// @param window Referencia a una instancia de Window.
+	/// @return HRESULT indicando si la operación fue exitosa (S_OK).
+	HRESULT init(const Window& window);
 
-    // ========================================================
-    // MÉTODO: update()
-    // (Vacío por ahora) Se puede usar más adelante para animar o adaptar el viewport dinámicamente.
-    // ========================================================
-    void
-        update();
+	/// @brief Inicializa el viewport con dimensiones específicas.
+	/// @param width Ancho del viewport.
+	/// @param height Alto del viewport.
+	/// @return HRESULT indicando si la operación fue exitosa (S_OK).
+	HRESULT init(unsigned int width, unsigned int height);
 
-    // ========================================================
-    // MÉTODO: render()
-    // Establece el viewport activo en el pipeline gráfico.
-    // Esto le dice a DirectX en qué región de la pantalla debe dibujar.
-    // ========================================================
-    void
-        render(DeviceContext& deviceContext);
+	/// @brief Método de actualización (por ahora sin uso).
+	void update();
 
-    // ========================================================
-    // MÉTODO: destroy()
-    // Este método queda como placeholder en caso de que más adelante
-    // se quiera liberar algo asociado al viewport (por ahora, no es necesario).
-    // ========================================================
-    void
-        destroy();
+	/// @brief Establece este viewport como activo en el pipeline gráfico.
+	/// @param deviceContext Contexto de dispositivo en el que se aplicará el viewport.
+	void render(DeviceContext& deviceContext);
+
+	/// @brief Libera recursos asociados al viewport (actualmente no necesario).
+	void destroy();
 
 public:
-    // Viewport de DirectX. Contiene info como ancho, alto, profundidad y posición.
-    D3D11_VIEWPORT m_viewport;
+	/// @brief Estructura de viewport de Direct3D 11.
+	/// Contiene información de tamaño, profundidad y posición del área visible.
+	D3D11_VIEWPORT m_viewport;
 };

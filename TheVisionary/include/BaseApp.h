@@ -2,60 +2,67 @@
 #include "Prerequisites.h"
 #include "Window.h"
 
-// ===========================================================
-// CLASE: BaseApp
-// Clase base para una aplicación de motor gráfico con DirectX.
-// Sirve como punto de partida para instanciar y controlar el ciclo
-// de vida de la app (inicio, bucle de juego, cierre).
-// ===========================================================
+/**
+ * @class BaseApp
+ * @brief Clase base para una aplicación de motor gráfico con DirectX.
+ *
+ * Esta clase define el ciclo de vida de la aplicación:
+ * inicialización, actualización, renderizado y destrucción.
+ * También gestiona la ventana principal y ejecuta el bucle principal del programa.
+ */
 class BaseApp {
 public:
-    // Constructor por defecto
+     /**
+      * @brief Constructor por defecto.
+      */
     BaseApp() = default;
 
-    // Destructor por defecto
+    /**
+     * @brief Destructor por defecto.
+     */
     ~BaseApp() = default;
 
-    // =======================================================
-    // MÉTODO: init()
-    // Inicializa la aplicación. En esta etapa se pueden cargar
-    // recursos, crear dispositivos, inicializar subsistemas, etc.
-    // Por ahora está definido pero no implementado (ver .cpp).
-    // =======================================================
+    /**
+     * @brief Inicializa la aplicación.
+     *
+     * Este método puede usarse para crear dispositivos, cargar recursos
+     * o preparar subsistemas del motor. Actualmente no está implementado.
+     * @return HRESULT Código de éxito o error.
+     */
     HRESULT init();
 
-    // =======================================================
-    // MÉTODO: update()
-    // Método de actualización lógica. Se ejecuta cada frame
-    // para actualizar el estado de la aplicación o del juego.
-    // =======================================================
+    /**
+     * @brief Actualiza la lógica de la aplicación por frame.
+     *
+     * Aquí se puede controlar la lógica del juego, animaciones, físicas, etc.
+     */
     void update();
 
-    // =======================================================
-    // MÉTODO: render()
-    // Método que se encarga del renderizado. Aquí se dibuja
-    // todo lo que se deba mostrar en pantalla cada frame.
-    // =======================================================
+    /**
+     * @brief Renderiza el contenido de la aplicación por frame.
+     *
+     * Este método se encarga de dibujar los elementos visuales en pantalla.
+     */
     void render();
 
-    // =======================================================
-    // MÉTODO: destroy()
-    // Libera todos los recursos utilizados por la aplicación.
-    // Es llamado antes de cerrar la aplicación.
-    // =======================================================
+    /**
+     * @brief Libera los recursos utilizados por la aplicación.
+     *
+     * Este método debe llamarse antes de cerrar la app para evitar fugas de memoria.
+     */
     void destroy();
 
-    // =======================================================
-    // MÉTODO: run()
-    // Lanza la aplicación. Este método funciona como el punto
-    // de entrada personalizado que gestiona la ventana y el loop principal.
-    // Parámetros:
-    // - hInstance: instancia del programa
-    // - hPrevInstance: (no se usa, compatibilidad)
-    // - lpCmdLine: argumentos desde línea de comandos
-    // - nCmdShow: cómo se mostrará la ventana
-    // - wndproc: función para manejar eventos de Windows
-    // =======================================================
+    /**
+     * @brief Lanza la aplicación (punto de entrada principal).
+     *
+     * Se encarga de iniciar la ventana principal y correr el loop principal.
+     * @param hInstance Instancia del programa (WinMain).
+     * @param hPrevInstance Instancia anterior (no utilizada).
+     * @param lpCmdLine Argumentos desde línea de comandos.
+     * @param nCmdShow Modo de visualización de la ventana.
+     * @param wndproc Función de callback para eventos de Windows.
+     * @return int Código de salida de la aplicación.
+     */
     int run(HINSTANCE hInstance,
         HINSTANCE hPrevInstance,
         LPWSTR lpCmdLine,
@@ -63,6 +70,8 @@ public:
         WNDPROC wndproc);
 
 private:
-    // Objeto que representa la ventana principal de la aplicación
+     /**
+      * @brief Objeto que representa la ventana principal de la aplicación.
+      */
     Window m_window;
 };
