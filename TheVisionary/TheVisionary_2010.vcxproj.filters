@@ -65,6 +65,9 @@
     <ClInclude Include="include\MeshComponent.h">
       <Filter>include</Filter>
     </ClInclude>
+    <ClInclude Include="include\BlendState.h">
+      <Filter>include</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="TheVisionary.cpp" />
@@ -102,6 +105,9 @@
       <Filter>source</Filter>
     </ClCompile>
     <ClCompile Include="src\Buffer.cpp">
+      <Filter>source</Filter>
+    </ClCompile>
+    <ClCompile Include="src\BlendState.cpp">
       <Filter>source</Filter>
     </ClCompile>
   </ItemGroup>
