@@ -288,7 +288,7 @@ HRESULT InitDevice()
     }
 
     // Establecer topología primitiva
-    g_deviceContext.m_deviceContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+    g_deviceContext.IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 
     // Crear los constant buffers
     hr = m_neverChanges.init(g_device, sizeof(CBNeverChanges));
@@ -432,7 +432,7 @@ HRESULT InitDevice()
 //--------------------------------------------------------------------------------------
 void CleanupDevice()
 {
-    if (g_deviceContext.m_deviceContext) g_deviceContext.m_deviceContext->ClearState();
+    g_deviceContext.clearState();
 
     g_shadowBlendState.destroy();
     g_shadowDepthStencilState.destroy();
@@ -457,8 +457,7 @@ void CleanupDevice()
     g_depthStencilView.destroy();
     g_renderTargetView.destroy();
     g_swapChain.destroy();
-    if (g_deviceContext.m_deviceContext) g_deviceContext.m_deviceContext->Release();
-    if (g_device.m_device) g_device.m_device->Release();
+    g_deviceContext.release();
 }
 
 //--------------------------------------------------------------------------------------
@@ -584,64 +583,47 @@ void UpdateScene()
 //--------------------------------------------------------------------------------------
 void RenderScene()
 {
-    // Limpiar el back buffer y el depth buffer
     g_renderTargetView.render(g_deviceContext, g_depthStencilView, 1, ClearColor);
-
-    // Set Viewport
     g_viewport.render(g_deviceContext);
-
     g_depthStencilView.render(g_deviceContext);
-
-    // Configurar los buffers y shaders para el pipeline
     g_shaderProgram.render(g_deviceContext);
 
-    // Asignar buffers constantes
     m_neverChanges.render(g_deviceContext, 0, 1);
     m_changeOnResize.render(g_deviceContext, 1, 1);
-    //------------- Renderizar el plano (suelo) -------------//
-      // Asignar buffers Vertex e Index
+
+    // --- Plano ---
     m_planeVertexBuffer.render(g_deviceContext, 0, 1);
     m_planeIndexBuffer.render(g_deviceContext, 0, 1, false, DXGI_FORMAT_R32_UINT);
-
-    // Asignar buffers constantes
     m_constPlane.render(g_deviceContext, 2, 1);
     m_constPlane.render(g_deviceContext, 2, 1, true);
 
-    g_deviceContext.m_deviceContext->PSSetShaderResources(0, 1, &g_pTextureRV);
-    g_deviceContext.m_deviceContext->PSSetSamplers(0, 1, &g_pSamplerLinear);
-    g_deviceContext.m_deviceContext->DrawIndexed(planeMesh.m_index.size(), 0, 0);
+    g_deviceContext.PSSetShaderResources(0, 1, &g_pTextureRV);
+    g_deviceContext.PSSetSamplers(0, 1, &g_pSamplerLinear);
+    g_deviceContext.DrawIndexed(static_cast<UINT>(planeMesh.m_index.size()), 0, 0);
 
-    //------------- Renderizar el cubo (normal) -------------//
-      // Asignar buffers Vertex e Index
+    // --- Cubo ---
     m_vertexBuffer.render(g_deviceContext, 0, 1);
     m_indexBuffer.render(g_deviceContext, 0, 1, false, DXGI_FORMAT_R32_UINT);
-
-    // Asignar buffers constantes
     m_changeEveryFrame.render(g_deviceContext, 2, 1);
     m_changeEveryFrame.render(g_deviceContext, 2, 1, true);
 
-    g_deviceContext.m_deviceContext->PSSetShaderResources(0, 1, &g_pTextureRV);
-    g_deviceContext.m_deviceContext->PSSetSamplers(0, 1, &g_pSamplerLinear);
-    g_deviceContext.m_deviceContext->DrawIndexed(cubeMesh.m_index.size(), 0, 0);
+    g_deviceContext.PSSetShaderResources(0, 1, &g_pTextureRV);
+    g_deviceContext.PSSetSamplers(0, 1, &g_pSamplerLinear);
+    g_deviceContext.DrawIndexed(static_cast<UINT>(cubeMesh.m_index.size()), 0, 0);
 
-    //------------- Renderizar la sombra del cubo -------------//
+    // --- Sombra del cubo ---
     g_shaderShadow.render(g_deviceContext, PIXEL_SHADER);
-
     g_shadowBlendState.render(g_deviceContext, blendFactor, 0xffffffff);
     g_shadowDepthStencilState.render(g_deviceContext, 0);
 
-    // Asignar buffers Vertex e Index
     m_vertexBuffer.render(g_deviceContext, 0, 1);
     m_indexBuffer.render(g_deviceContext, 0, 1, false, DXGI_FORMAT_R32_UINT);
-
-    // Asignar buffers constantes
     m_constShadow.render(g_deviceContext, 2, 1, true);
 
-    g_deviceContext.m_deviceContext->DrawIndexed(cubeMesh.m_index.size(), 0, 0);
+    g_deviceContext.DrawIndexed(static_cast<UINT>(cubeMesh.m_index.size()), 0, 0);
 
     g_shadowBlendState.render(g_deviceContext, blendFactor, 0xffffffff, true);
     g_shadowDepthStencilState.render(g_deviceContext, 0, true);
 
-    // Presentar el back buffer al front buffer
     g_swapChain.present();
 }
