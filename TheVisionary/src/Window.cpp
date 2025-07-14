@@ -1,6 +1,6 @@
-/**
+﻿/**
  * @file Window.cpp
- * @brief Implementaci�n de la clase Window.
+ * @brief Implementación de la clase Window.
  */
 
 #include "Window.h"
@@ -10,7 +10,7 @@ HRESULT Window::init(HINSTANCE hInstance, int nCmdShow, WNDPROC wndproc) {
 
     WNDCLASSEX wcex;
     wcex.cbSize = sizeof(WNDCLASSEX);
-    wcex.style = CS_HREDRAW | CS_VREDRAW;
+    wcex.style = CS_HREDRAW | CS_VREDRAW | CS_OWNDC; // ✅ Agregado CS_OWNDC para ImGui Viewports
     wcex.lpfnWndProc = wndproc;
     wcex.cbClsExtra = 0;
     wcex.cbWndExtra = 0;
@@ -62,10 +62,13 @@ HRESULT Window::init(HINSTANCE hInstance, int nCmdShow, WNDPROC wndproc) {
 }
 
 void Window::update() {
+    // No se necesita lógica por ahora
 }
 
 void Window::render() {
+    // No se necesita lógica por ahora
 }
 
 void Window::destroy() {
+    // No se necesita lógica por ahora
 }

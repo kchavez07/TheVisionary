@@ -18,6 +18,15 @@
     <Filter Include="source">
       <UniqueIdentifier>{dac1af2f-0fca-42d7-85b7-51667677a812}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Imgui">
+      <UniqueIdentifier>{d404f6d2-b88f-41b8-b060-958f175f3c30}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Imgui\include">
+      <UniqueIdentifier>{1c2b9df5-2e25-4f55-b6c0-3a135612411e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Imgui\src">
+      <UniqueIdentifier>{5dc91f1f-b5e6-43cb-80e0-beda4b1d6d8a}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\Prerequisites.h">
@@ -71,6 +80,33 @@
     <ClInclude Include="include\DepthStencilState.h">
       <Filter>include</Filter>
     </ClInclude>
+    <ClInclude Include="include\UserInterface.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="Thirdparty\imgui-docking\imstb_rectpack.h">
+      <Filter>Imgui\include</Filter>
+    </ClInclude>
+    <ClInclude Include="Thirdparty\imgui-docking\imstb_textedit.h">
+      <Filter>Imgui\include</Filter>
+    </ClInclude>
+    <ClInclude Include="Thirdparty\imgui-docking\imstb_truetype.h">
+      <Filter>Imgui\include</Filter>
+    </ClInclude>
+    <ClInclude Include="Thirdparty\imgui-docking\imconfig.h">
+      <Filter>Imgui\include</Filter>
+    </ClInclude>
+    <ClInclude Include="Thirdparty\imgui-docking\imgui.h">
+      <Filter>Imgui\include</Filter>
+    </ClInclude>
+    <ClInclude Include="Thirdparty\imgui-docking\imgui_internal.h">
+      <Filter>Imgui\include</Filter>
+    </ClInclude>
+    <ClInclude Include="Thirdparty\imgui-docking\backends\imgui_impl_dx11.h">
+      <Filter>Imgui\src</Filter>
+    </ClInclude>
+    <ClInclude Include="Thirdparty\imgui-docking\backends\imgui_impl_win32.h">
+      <Filter>Imgui\src</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="TheVisionary.cpp" />
@@ -116,6 +152,30 @@
     <ClCompile Include="src\DepthStencilState.cpp">
       <Filter>source</Filter>
     </ClCompile>
+    <ClCompile Include="src\UserInterface.cpp">
+      <Filter>source</Filter>
+    </ClCompile>
+    <ClCompile Include="Thirdparty\imgui-docking\backends\imgui_impl_dx11.cpp">
+      <Filter>Imgui\src</Filter>
+    </ClCompile>
+    <ClCompile Include="Thirdparty\imgui-docking\backends\imgui_impl_win32.cpp">
+      <Filter>Imgui\src</Filter>
+    </ClCompile>
+    <ClCompile Include="Thirdparty\imgui-docking\imgui_demo.cpp">
+      <Filter>Imgui\src</Filter>
+    </ClCompile>
+    <ClCompile Include="Thirdparty\imgui-docking\imgui_draw.cpp">
+      <Filter>Imgui\src</Filter>
+    </ClCompile>
+    <ClCompile Include="Thirdparty\imgui-docking\imgui_tables.cpp">
+      <Filter>Imgui\src</Filter>
+    </ClCompile>
+    <ClCompile Include="Thirdparty\imgui-docking\imgui_widgets.cpp">
+      <Filter>Imgui\src</Filter>
+    </ClCompile>
+    <ClCompile Include="Thirdparty\imgui-docking\imgui.cpp">
+      <Filter>Imgui\src</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="TheVisionary.fx">
@@ -129,7 +189,5 @@
     <ResourceCompile Include="TheVisionary.rc">
       <Filter>Resource Files</Filter>
     </ResourceCompile>
-  </ItemGroup>
-  <ItemGroup>
   </ItemGroup>
 </Project>

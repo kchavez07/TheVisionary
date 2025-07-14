@@ -1,11 +1,12 @@
-/**
+Ôªø/**
  * @file BaseApp.cpp
- * @brief ImplementaciÛn de la clase BaseApp.
+ * @brief Implementaci√≥n de la clase BaseApp.
  */
 
 #include "BaseApp.h"
+#include "UserInterface.h"
 
- // DeclaraciÛn adelantada del procedimiento de ventana
+ // Declaraci√≥n adelantada del procedimiento de ventana
 extern LRESULT CALLBACK WndProc(HWND, UINT, WPARAM, LPARAM);
 
 int BaseApp::run(HINSTANCE hInstance,
@@ -122,7 +123,7 @@ HRESULT BaseApp::init()
         ERROR("BaseApp", "init", ("Failed to initialize ShaderProgram. HRESULT: " + std::to_string(hr)).c_str());
         return hr;
     }
-    // === VÈrtices e Ìndices del cubo ===
+    // === V√©rtices e √≠ndices del cubo ===
     SimpleVertex vertices[] = {
         { XMFLOAT3(-1.0f, 1.0f, -1.0f), XMFLOAT2(0.0f, 0.0f) },
         { XMFLOAT3(1.0f, 1.0f, -1.0f), XMFLOAT2(1.0f, 0.0f) },
@@ -218,19 +219,19 @@ HRESULT BaseApp::init()
         return hr;
     }
 
-    // === Configurar c·mara (View Matrix) ===
-    XMVECTOR Eye = XMVectorSet(0.0f, 3.0f, -6.0f, 0.0f); // PosiciÛn de la c·mara
-    XMVECTOR At = XMVectorSet(0.0f, 1.0f, 0.0f, 0.0f);   // Hacia dÛnde mira
+    // === Configurar c√°mara (View Matrix) ===
+    XMVECTOR Eye = XMVectorSet(0.0f, 3.0f, -6.0f, 0.0f); // Posici√≥n de la c√°mara
+    XMVECTOR At = XMVectorSet(0.0f, 1.0f, 0.0f, 0.0f);   // Hacia d√≥nde mira
     XMVECTOR Up = XMVectorSet(0.0f, 1.0f, 0.0f, 0.0f);   // Vector arriba
 
     m_view = XMMatrixLookAtLH(Eye, At, Up);
     m_cbNeverChanges.mView = XMMatrixTranspose(m_view);
 
-    // === Configurar proyecciÛn (Projection Matrix) ===
+    // === Configurar proyecci√≥n (Projection Matrix) ===
     m_projection = XMMatrixPerspectiveFovLH(XM_PIDIV4, m_window.m_width / (FLOAT)m_window.m_height, 0.01f, 100.0f);
     m_cbChangesOnResize.mProjection = XMMatrixTranspose(m_projection);
 
-    // === Crear geometrÌa del plano (suelo) ===
+    // === Crear geometr√≠a del plano (suelo) ===
     SimpleVertex planeVertices[] =
     {
         { XMFLOAT3(-20.0f, 0.0f, -20.0f), XMFLOAT2(0.0f, 0.0f) },
@@ -334,13 +335,43 @@ HRESULT BaseApp::init()
     }
 
     m_deviceContext.IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
-    return S_OK; // Retorno provisional, se reemplazar· al final
+
+    // === Inicializar Interfaz de Usuario (ImGui) ===
+    HWND hwnd = m_window.getHWND();
+    m_userInterface.init(hwnd, m_device.m_device, m_deviceContext.m_deviceContext);
+
+    // === Crear estado rasterizado s√≥lido ===
+    D3D11_RASTERIZER_DESC descSolid = {};
+    descSolid.FillMode = D3D11_FILL_SOLID;
+    descSolid.CullMode = D3D11_CULL_BACK;
+    descSolid.DepthClipEnable = TRUE;
+
+    hr = m_device.m_device->CreateRasterizerState(&descSolid, &m_rasterStateDefault);
+    if (FAILED(hr)) {
+        ERROR("BaseApp", "init", "Failed to create solid rasterizer state.");
+        return hr;
+    }
+
+    // === Crear estado rasterizado en wireframe ===
+    D3D11_RASTERIZER_DESC descWireframe = {};
+    descWireframe.FillMode = D3D11_FILL_WIREFRAME;
+    descWireframe.CullMode = D3D11_CULL_NONE;
+    descWireframe.DepthClipEnable = TRUE;
+
+    hr = m_device.m_device->CreateRasterizerState(&descWireframe, &m_rasterStateWireframe);
+    if (FAILED(hr)) {
+        ERROR("BaseApp", "init", "Failed to create wireframe rasterizer state.");
+        return hr;
+    }
+
+    return S_OK;
+
 }
 
 
 void BaseApp::update()
 {
-    // === Actualizar tiempo ===
+   // === Actualizar tiempo ===
     static float t = 0.0f;
     if (m_swapChain.m_driverType == D3D_DRIVER_TYPE_REFERENCE) {
         t += (float)XM_PI * 0.0125f;
@@ -348,28 +379,22 @@ void BaseApp::update()
     else {
         static DWORD dwTimeStart = 0;
         DWORD dwTimeCur = GetTickCount();
-        if (dwTimeStart == 0)
-            dwTimeStart = dwTimeCur;
+        if (dwTimeStart == 0) dwTimeStart = dwTimeCur;
         t = (dwTimeCur - dwTimeStart) / 1000.0f;
     }
 
-    // === Actualizar matrices de c·mara ===
+    // === Actualizar matrices de c√°mara y transformaciones ===
     m_cbNeverChanges.mView = XMMatrixTranspose(m_view);
     m_neverChanges.update(m_deviceContext, nullptr, 0, nullptr, &m_cbNeverChanges, 0, 0);
 
     m_cbChangesOnResize.mProjection = XMMatrixTranspose(m_projection);
     m_changeOnResize.update(m_deviceContext, nullptr, 0, nullptr, &m_cbChangesOnResize, 0, 0);
 
-    // === TransformaciÛn del cubo ===
-    XMMATRIX cubeScaleMat = XMMatrixScaling(1.0f, 1.0f, 1.0f);
-    XMMATRIX cubeRotMat =
-        XMMatrixRotationX(0.0f) *
-        XMMatrixRotationY(t) *
-        XMMatrixRotationZ(0.0f);
-    XMMATRIX cubeTransMat = XMMatrixTranslation(0.0f, 2.0f, 0.0f);
-    m_world = cubeTransMat * cubeRotMat * cubeScaleMat;
+    XMMATRIX cubeScale = XMMatrixScaling(1.0f, 1.0f, 1.0f);
+    XMMATRIX cubeRot = XMMatrixRotationY(t);
+    XMMATRIX cubeTrans = XMMatrixTranslation(0.0f, 2.0f, 0.0f);
+    m_world = cubeTrans * cubeRot * cubeScale;
 
-    // Color animado
     m_meshColor = {
         (sinf(t * 1.0f) + 1.0f) * 0.5f,
         (cosf(t * 3.0f) + 1.0f) * 0.5f,
@@ -377,13 +402,9 @@ void BaseApp::update()
         1.0f
     };
 
-    // === TransformaciÛn del plano ===
-    XMMATRIX planeScale = XMMatrixScaling(1.0f, 1.0f, 1.0f);
-    XMMATRIX planeRot = XMMatrixIdentity();
     XMMATRIX planeTrans = XMMatrixTranslation(0.0f, -5.0f, 0.0f);
-    m_planeWorld = planeTrans * planeRot * planeScale;
+    m_planeWorld = planeTrans;
 
-    // === Actualizar constant buffers ===
     m_cbPlane.mWorld = XMMatrixTranspose(m_planeWorld);
     m_cbPlane.vMeshColor = XMFLOAT4(1.f, 1.f, 1.f, 1.f);
     m_constPlane.update(m_deviceContext, nullptr, 0, nullptr, &m_cbPlane, 0, 0);
@@ -392,7 +413,6 @@ void BaseApp::update()
     m_cb.vMeshColor = m_meshColor;
     m_changeEveryFrame.update(m_deviceContext, nullptr, 0, nullptr, &m_cb, 0, 0);
 
-    // === Sombra del cubo ===
     float dot = m_lightPos.y;
     XMMATRIX shadowMat = XMMATRIX(
         dot, -m_lightPos.x, 0.0f, 0.0f,
@@ -405,18 +425,29 @@ void BaseApp::update()
     m_cbShadow.mWorld = XMMatrixTranspose(shadowWorld);
     m_cbShadow.vMeshColor = XMFLOAT4(0.0f, 0.0f, 0.0f, 0.5f);
     m_constShadow.update(m_deviceContext, nullptr, 0, nullptr, &m_cbShadow, 0, 0);
+
+    m_userInterface.update();
+
 }
+
 
 
 void BaseApp::render()
 {
+    m_deviceContext.m_deviceContext->RSSetState(
+        g_wireframeMode ? m_rasterStateWireframe : m_rasterStateDefault
+    );
+
+    // Limpiar con color din√°mico de fondo
+    m_renderTargetView.render(m_deviceContext, m_depthStencilView, 1, g_clearColor);
+
     // === Preparar render target y estados iniciales ===
     m_renderTargetView.render(m_deviceContext, m_depthStencilView, 1, m_clearColor);
     m_viewport.render(m_deviceContext);
     m_depthStencilView.render(m_deviceContext);
     m_shaderProgram.render(m_deviceContext);
 
-    // === Buffers de c·mara ===
+    // === Buffers de c√°mara ===
     m_neverChanges.render(m_deviceContext, 0, 1);
     m_changeOnResize.render(m_deviceContext, 1, 1);
 
@@ -425,7 +456,6 @@ void BaseApp::render()
     m_planeIndexBuffer.render(m_deviceContext, 0, 1, false, DXGI_FORMAT_R32_UINT);
     m_constPlane.render(m_deviceContext, 2, 1);
     m_constPlane.render(m_deviceContext, 2, 1, true);
-
     m_deviceContext.PSSetShaderResources(0, 1, &m_textureRV);
     m_deviceContext.PSSetSamplers(0, 1, &m_samplerLinear);
     m_deviceContext.DrawIndexed(static_cast<UINT>(m_planeMesh.m_index.size()), 0, 0);
@@ -435,7 +465,6 @@ void BaseApp::render()
     m_indexBuffer.render(m_deviceContext, 0, 1, false, DXGI_FORMAT_R32_UINT);
     m_changeEveryFrame.render(m_deviceContext, 2, 1);
     m_changeEveryFrame.render(m_deviceContext, 2, 1, true);
-
     m_deviceContext.PSSetShaderResources(0, 1, &m_textureRV);
     m_deviceContext.PSSetSamplers(0, 1, &m_samplerLinear);
     m_deviceContext.DrawIndexed(static_cast<UINT>(m_cubeMesh.m_index.size()), 0, 0);
@@ -444,18 +473,17 @@ void BaseApp::render()
     m_shaderShadow.render(m_deviceContext, PIXEL_SHADER);
     m_shadowBlendState.render(m_deviceContext, m_blendFactor, 0xffffffff);
     m_shadowDepthStencilState.render(m_deviceContext, 0);
-
     m_vertexBuffer.render(m_deviceContext, 0, 1);
     m_indexBuffer.render(m_deviceContext, 0, 1, false, DXGI_FORMAT_R32_UINT);
     m_constShadow.render(m_deviceContext, 2, 1, true);
-
     m_deviceContext.DrawIndexed(static_cast<UINT>(m_cubeMesh.m_index.size()), 0, 0);
 
-    // Restaurar estados
+    // === Restaurar estados ===
     m_shadowBlendState.render(m_deviceContext, m_blendFactor, 0xffffffff, true);
     m_shadowDepthStencilState.render(m_deviceContext, 0, true);
 
-    // Presentar frame
+    // === Presentar frame final ===
+    m_userInterface.render();
     m_swapChain.present();
 }
 
@@ -510,4 +538,15 @@ void BaseApp::destroy()
         m_device.m_device = nullptr;
     }
 
+    if (m_rasterStateWireframe) {
+        m_rasterStateWireframe->Release();
+        m_rasterStateWireframe = nullptr;
+    }
+    if (m_rasterStateDefault) {
+        m_rasterStateDefault->Release();
+        m_rasterStateDefault = nullptr;
+    }
+    
 }
+
+

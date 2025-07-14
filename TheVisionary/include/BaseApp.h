@@ -1,4 +1,4 @@
-#pragma once
+Ôªø#pragma once
 #include "Prerequisites.h"
 #include "Window.h"
 #include "Device.h"
@@ -13,15 +13,17 @@
 #include "DepthStencilState.h"
 #include "Buffer.h"
 #include "MeshComponent.h"
+#include "UserInterface.h"
+
 
 /**
  * @file BaseApp.h
  * @class BaseApp
- * @brief Clase base para una aplicaciÛn de motor gr·fico con DirectX.
+ * @brief Clase base para una aplicaci√≥n de motor gr√°fico con DirectX.
  *
- * Esta clase define el ciclo de vida de la aplicaciÛn:
- * inicializaciÛn, actualizaciÛn, renderizado y destrucciÛn.
- * TambiÈn gestiona la ventana principal y ejecuta el bucle principal del programa.
+ * Esta clase define el ciclo de vida de la aplicaci√≥n:
+ * inicializaci√≥n, actualizaci√≥n, renderizado y destrucci√≥n.
+ * Tambi√©n gestiona la ventana principal y ejecuta el bucle principal del programa.
  */
 class BaseApp {
 public:
@@ -40,6 +42,10 @@ public:
         WNDPROC wndproc);
 
 private:
+
+    ID3D11RasterizerState* m_rasterStateDefault = nullptr;
+    ID3D11RasterizerState* m_rasterStateWireframe = nullptr;
+
     // === Subsistemas principales ===
     Window m_window;
     Device m_device;
@@ -68,7 +74,7 @@ private:
     Buffer m_planeIndexBuffer;
     Buffer m_constPlane;
 
-    // === GeometrÌa ===
+    // === Geometr√≠a ===
     MeshComponent m_cubeMesh;
     MeshComponent m_planeMesh;
 
@@ -76,23 +82,27 @@ private:
     ID3D11ShaderResourceView* m_textureRV = nullptr;
     ID3D11SamplerState* m_samplerLinear = nullptr;
 
-    // === Transformaciones y c·mara ===
+    // === Transformaciones y c√°mara ===
     XMMATRIX m_world;
     XMMATRIX m_planeWorld;
     XMMATRIX m_view;
     XMMATRIX m_projection;
 
-    // === Constantes y configuraciÛn visual ===
+    // === Constantes y configuraci√≥n visual ===
     XMFLOAT4 m_meshColor = { 0.7f, 0.7f, 0.7f, 1.0f };
     XMFLOAT4 m_lightPos = { 2.0f, 4.0f, -2.0f, 1.0f };
     UINT m_planeIndexCount = 0;
     float m_clearColor[4] = { 0.0f, 0.125f, 0.3f, 1.0f };
     float m_blendFactor[4] = { 0.f, 0.f, 0.f, 0.f };
 
-    // === Const Buffers de aplicaciÛn ===
+    // === Const Buffers de aplicaci√≥n ===
     CBNeverChanges m_cbNeverChanges;
     CBChangeOnResize m_cbChangesOnResize;
     CBChangesEveryFrame m_cb;
     CBChangesEveryFrame m_cbPlane;
     CBChangesEveryFrame m_cbShadow;
+
+    // === UI ===
+    UserInterface m_userInterface;
 };
+

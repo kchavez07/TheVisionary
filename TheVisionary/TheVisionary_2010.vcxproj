@@ -161,7 +161,7 @@
       <FloatingPointModel>Fast</FloatingPointModel>
       <EnableEnhancedInstructionSet>StreamingSIMDExtensions2</EnableEnhancedInstructionSet>
       <ExceptionHandling>Sync</ExceptionHandling>
-      <AdditionalIncludeDirectories>./include/;DXUT\Core;DXUT\Optional;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>./include/;DXUT\Core;DXUT\Optional;$(ProjectDir)Thirdparty\imgui-docking;$(ProjectDir)Thirdparty\imgui-docking\backends;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <AdditionalOptions> %(AdditionalOptions)</AdditionalOptions>
       <PreprocessorDefinitions>WIN32;_DEBUG;DEBUG;PROFILE;_WINDOWS;D3DXFX_LARGEADDRESS_HANDLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
@@ -205,7 +205,7 @@
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <FloatingPointModel>Fast</FloatingPointModel>
       <ExceptionHandling>Sync</ExceptionHandling>
-      <AdditionalIncludeDirectories>./include/;DXUT\Core;DXUT\Optional;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>./include/;DXUT\Core;DXUT\Optional;$(ProjectDir)Thirdparty\imgui-docking;$(ProjectDir)Thirdparty\imgui-docking\backends;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <AdditionalOptions> %(AdditionalOptions)</AdditionalOptions>
       <PreprocessorDefinitions>WIN32;_DEBUG;DEBUG;PROFILE;_WINDOWS;D3DXFX_LARGEADDRESS_HANDLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
@@ -250,7 +250,7 @@
       <FloatingPointModel>Fast</FloatingPointModel>
       <EnableEnhancedInstructionSet>StreamingSIMDExtensions2</EnableEnhancedInstructionSet>
       <ExceptionHandling>Sync</ExceptionHandling>
-      <AdditionalIncludeDirectories>./include/;DXUT\Core;DXUT\Optional;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>./include/;DXUT\Core;DXUT\Optional;$(ProjectDir)Thirdparty\imgui-docking;$(ProjectDir)Thirdparty\imgui-docking\backends;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <AdditionalOptions> %(AdditionalOptions)</AdditionalOptions>
       <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;D3DXFX_LARGEADDRESS_HANDLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <LanguageStandard>stdcpp17</LanguageStandard>
@@ -295,7 +295,7 @@
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <FloatingPointModel>Fast</FloatingPointModel>
       <ExceptionHandling>Sync</ExceptionHandling>
-      <AdditionalIncludeDirectories>./include/;DXUT\Core;DXUT\Optional;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>./include/;DXUT\Core;DXUT\Optional;$(ProjectDir)Thirdparty\imgui-docking;$(ProjectDir)Thirdparty\imgui-docking\backends;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <AdditionalOptions> %(AdditionalOptions)</AdditionalOptions>
       <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;D3DXFX_LARGEADDRESS_HANDLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <LanguageStandard>stdcpp17</LanguageStandard>
@@ -341,7 +341,7 @@
       <FloatingPointModel>Fast</FloatingPointModel>
       <EnableEnhancedInstructionSet>StreamingSIMDExtensions2</EnableEnhancedInstructionSet>
       <ExceptionHandling>Sync</ExceptionHandling>
-      <AdditionalIncludeDirectories>./include/;DXUT\Core;DXUT\Optional;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>./include/;DXUT\Core;DXUT\Optional;$(ProjectDir)Thirdparty\imgui-docking;$(ProjectDir)Thirdparty\imgui-docking\backends;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <AdditionalOptions> %(AdditionalOptions)</AdditionalOptions>
       <PreprocessorDefinitions>WIN32;NDEBUG;PROFILE;_WINDOWS;D3DXFX_LARGEADDRESS_HANDLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <LanguageStandard>stdcpp17</LanguageStandard>
@@ -386,7 +386,7 @@
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <FloatingPointModel>Fast</FloatingPointModel>
       <ExceptionHandling>Sync</ExceptionHandling>
-      <AdditionalIncludeDirectories>./include/;DXUT\Core;DXUT\Optional;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>./include/;DXUT\Core;DXUT\Optional;$(ProjectDir)Thirdparty\imgui-docking;$(ProjectDir)Thirdparty\imgui-docking\backends;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <AdditionalOptions> %(AdditionalOptions)</AdditionalOptions>
       <PreprocessorDefinitions>WIN32;NDEBUG;PROFILE;_WINDOWS;D3DXFX_LARGEADDRESS_HANDLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <LanguageStandard>stdcpp17</LanguageStandard>
@@ -421,7 +421,6 @@
       </Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
-  <ItemGroup />
   <ItemGroup>
     <ClCompile Include="src\BaseApp.cpp" />
     <ClCompile Include="src\BlendState.cpp" />
@@ -430,6 +429,7 @@
     <ClCompile Include="src\DepthStencilView.cpp" />
     <ClCompile Include="src\Device.cpp" />
     <ClCompile Include="src\DeviceContext.cpp" />
+    <ClCompile Include="src\UserInterface.cpp" />
     <ClCompile Include="src\InputLayout.cpp" />
     <ClCompile Include="src\RenderTargetView.cpp" />
     <ClCompile Include="src\ShaderProgram.cpp" />
@@ -438,6 +438,13 @@
     <ClCompile Include="src\Viewport.cpp" />
     <ClCompile Include="src\Window.cpp" />
     <ClCompile Include="TheVisionary.cpp" />
+    <ClCompile Include="Thirdparty\imgui-docking\backends\imgui_impl_dx11.cpp" />
+    <ClCompile Include="Thirdparty\imgui-docking\backends\imgui_impl_win32.cpp" />
+    <ClCompile Include="Thirdparty\imgui-docking\imgui.cpp" />
+    <ClCompile Include="Thirdparty\imgui-docking\imgui_demo.cpp" />
+    <ClCompile Include="Thirdparty\imgui-docking\imgui_draw.cpp" />
+    <ClCompile Include="Thirdparty\imgui-docking\imgui_tables.cpp" />
+    <ClCompile Include="Thirdparty\imgui-docking\imgui_widgets.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="TheVisionary.fx" />
@@ -450,6 +457,7 @@
     <ClInclude Include="include\DepthStencilView.h" />
     <ClInclude Include="include\Device.h" />
     <ClInclude Include="include\DeviceContext.h" />
+    <ClInclude Include="include\UserInterface.h" />
     <ClInclude Include="include\InputLayout.h" />
     <ClInclude Include="include\MeshComponent.h" />
     <ClInclude Include="include\Prerequisites.h" />
@@ -461,9 +469,15 @@
     <ClInclude Include="include\Viewport.h" />
     <ClInclude Include="include\Window.h" />
     <CLInclude Include="resource.h" />
+    <ClInclude Include="Thirdparty\imgui-docking\backends\imgui_impl_dx11.h" />
+    <ClInclude Include="Thirdparty\imgui-docking\backends\imgui_impl_win32.h" />
+    <ClInclude Include="Thirdparty\imgui-docking\imconfig.h" />
+    <ClInclude Include="Thirdparty\imgui-docking\imgui.h" />
+    <ClInclude Include="Thirdparty\imgui-docking\imgui_internal.h" />
+    <ClInclude Include="Thirdparty\imgui-docking\imstb_rectpack.h" />
+    <ClInclude Include="Thirdparty\imgui-docking\imstb_textedit.h" />
+    <ClInclude Include="Thirdparty\imgui-docking\imstb_truetype.h" />
     <ResourceCompile Include="TheVisionary.rc" />
-  </ItemGroup>
-  <ItemGroup>
   </ItemGroup>
   <ItemGroup>
   </ItemGroup>

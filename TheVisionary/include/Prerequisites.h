@@ -71,3 +71,12 @@ enum
     VERTEX_SHADER = 0,
     PIXEL_SHADER = 1
 };
+
+// === Variables globales de configuración gráfica ===
+extern bool g_wireframeMode;
+extern bool g_enableRotation;
+extern bool g_autoRotate;
+extern float g_clearColor[4];
+
+extern ID3D11RasterizerState* m_rasterStateDefault;
+extern ID3D11RasterizerState* m_rasterStateWireframe;

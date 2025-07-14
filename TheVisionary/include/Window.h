@@ -1,10 +1,10 @@
-#pragma once
+Ôªø#pragma once
 #include "Prerequisites.h"
 
 /**
  * @file Window.h
  * @class Window
- * @brief Maneja la creaciÛn y control de la ventana principal del motor gr·fico.
+ * @brief Maneja la creaci√≥n y control de la ventana principal del motor gr√°fico.
  */
 class Window {
 public:
@@ -15,6 +15,8 @@ public:
 	void update();
 	void render();
 	void destroy();
+
+	HWND getHWND() const { return m_hWnd; } 
 
 	HWND m_hWnd = nullptr;
 	unsigned int m_width;
