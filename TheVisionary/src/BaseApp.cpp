@@ -1,6 +1,6 @@
 ﻿/**
  * @file BaseApp.cpp
- * @brief Implementación de la clase BaseApp.
+ * @brief Implementación de la clase BaseApp
  */
 
 #include "BaseApp.h"
@@ -371,7 +371,7 @@ HRESULT BaseApp::init()
 
 void BaseApp::update()
 {
-   // === Actualizar tiempo ===
+    // === Actualizar tiempo ===
     static float t = 0.0f;
     if (m_swapChain.m_driverType == D3D_DRIVER_TYPE_REFERENCE) {
         t += (float)XM_PI * 0.0125f;
@@ -546,7 +546,5 @@ void BaseApp::destroy()
         m_rasterStateDefault->Release();
         m_rasterStateDefault = nullptr;
     }
-    
+
 }
-
-

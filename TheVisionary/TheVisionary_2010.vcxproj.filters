@@ -107,6 +107,15 @@
     <ClInclude Include="Thirdparty\imgui-docking\backends\imgui_impl_win32.h">
       <Filter>Imgui\src</Filter>
     </ClInclude>
+    <ClInclude Include="include\tiny_obj_loader.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\ModelLoader.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Screenshot.h">
+      <Filter>include</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="TheVisionary.cpp" />
@@ -175,6 +184,15 @@
     </ClCompile>
     <ClCompile Include="Thirdparty\imgui-docking\imgui.cpp">
       <Filter>Imgui\src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ModelLoader.cpp">
+      <Filter>source</Filter>
+    </ClCompile>
+    <ClCompile Include="src\tiny_obj_loader.cpp">
+      <Filter>source</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Screenshot.cpp">
+      <Filter>source</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
