@@ -22,10 +22,28 @@
       <UniqueIdentifier>{d404f6d2-b88f-41b8-b060-958f175f3c30}</UniqueIdentifier>
     </Filter>
     <Filter Include="Imgui\include">
-      <UniqueIdentifier>{1c2b9df5-2e25-4f55-b6c0-3a135612411e}</UniqueIdentifier>
+      <UniqueIdentifier>{e7d1d1fd-c4d0-47cc-bc2f-e213ea57abfa}</UniqueIdentifier>
     </Filter>
     <Filter Include="Imgui\src">
-      <UniqueIdentifier>{5dc91f1f-b5e6-43cb-80e0-beda4b1d6d8a}</UniqueIdentifier>
+      <UniqueIdentifier>{ec527b47-1a3e-4720-8c2b-550f4d529573}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="include\ECS">
+      <UniqueIdentifier>{bd7af4ca-7d1e-43ae-9870-d5bd76dbfe7e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="include\EngineUtilities">
+      <UniqueIdentifier>{028c63a5-a3b8-46b4-be88-9c94ddd78e54}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="include\EngineUtilities\Matrix">
+      <UniqueIdentifier>{61f8b29b-22e7-42e9-ac0a-a71066b37704}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="include\EngineUtilities\Memory">
+      <UniqueIdentifier>{d5ff8247-2281-4d75-a771-8d9c91e2d522}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="include\EngineUtilities\Utilities">
+      <UniqueIdentifier>{a6d24c4d-d9ee-407b-8966-b702c4ef27d6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="include\EngineUtilities\Vectors">
+      <UniqueIdentifier>{862d6549-cc7b-460d-9edb-bcdd7548248e}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -83,30 +101,6 @@
     <ClInclude Include="include\UserInterface.h">
       <Filter>include</Filter>
     </ClInclude>
-    <ClInclude Include="Thirdparty\imgui-docking\imstb_rectpack.h">
-      <Filter>Imgui\include</Filter>
-    </ClInclude>
-    <ClInclude Include="Thirdparty\imgui-docking\imstb_textedit.h">
-      <Filter>Imgui\include</Filter>
-    </ClInclude>
-    <ClInclude Include="Thirdparty\imgui-docking\imstb_truetype.h">
-      <Filter>Imgui\include</Filter>
-    </ClInclude>
-    <ClInclude Include="Thirdparty\imgui-docking\imconfig.h">
-      <Filter>Imgui\include</Filter>
-    </ClInclude>
-    <ClInclude Include="Thirdparty\imgui-docking\imgui.h">
-      <Filter>Imgui\include</Filter>
-    </ClInclude>
-    <ClInclude Include="Thirdparty\imgui-docking\imgui_internal.h">
-      <Filter>Imgui\include</Filter>
-    </ClInclude>
-    <ClInclude Include="Thirdparty\imgui-docking\backends\imgui_impl_dx11.h">
-      <Filter>Imgui\src</Filter>
-    </ClInclude>
-    <ClInclude Include="Thirdparty\imgui-docking\backends\imgui_impl_win32.h">
-      <Filter>Imgui\src</Filter>
-    </ClInclude>
     <ClInclude Include="include\tiny_obj_loader.h">
       <Filter>include</Filter>
     </ClInclude>
@@ -115,6 +109,78 @@
     </ClInclude>
     <ClInclude Include="include\Screenshot.h">
       <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="Imgui\imgui-docking-znly-docking\imconfig.h">
+      <Filter>Imgui\include</Filter>
+    </ClInclude>
+    <ClInclude Include="Imgui\imgui-docking-znly-docking\imgui.h">
+      <Filter>Imgui\include</Filter>
+    </ClInclude>
+    <ClInclude Include="Imgui\imgui-docking-znly-docking\imgui_internal.h">
+      <Filter>Imgui\include</Filter>
+    </ClInclude>
+    <ClInclude Include="Imgui\imgui-docking-znly-docking\imstb_rectpack.h">
+      <Filter>Imgui\include</Filter>
+    </ClInclude>
+    <ClInclude Include="Imgui\imgui-docking-znly-docking\imstb_textedit.h">
+      <Filter>Imgui\include</Filter>
+    </ClInclude>
+    <ClInclude Include="Imgui\imgui-docking-znly-docking\imstb_truetype.h">
+      <Filter>Imgui\include</Filter>
+    </ClInclude>
+    <ClInclude Include="Imgui\imgui-docking-znly-docking\backends\imgui_impl_dx11.h">
+      <Filter>Imgui\src</Filter>
+    </ClInclude>
+    <ClInclude Include="Imgui\imgui-docking-znly-docking\backends\imgui_impl_win32.h">
+      <Filter>Imgui\src</Filter>
+    </ClInclude>
+    <ClInclude Include="include\ECS\Actor.h">
+      <Filter>include\ECS</Filter>
+    </ClInclude>
+    <ClInclude Include="include\ECS\Component.h">
+      <Filter>include\ECS</Filter>
+    </ClInclude>
+    <ClInclude Include="include\ECS\Entity.h">
+      <Filter>include\ECS</Filter>
+    </ClInclude>
+    <ClInclude Include="include\ECS\Transform.h">
+      <Filter>include\ECS</Filter>
+    </ClInclude>
+    <ClInclude Include="include\EngineUtilities\Matrix\Matrix2x2.h">
+      <Filter>include\EngineUtilities\Matrix</Filter>
+    </ClInclude>
+    <ClInclude Include="include\EngineUtilities\Matrix\Matrix3x3.h">
+      <Filter>include\EngineUtilities\Matrix</Filter>
+    </ClInclude>
+    <ClInclude Include="include\EngineUtilities\Matrix\Matrix4x4.h">
+      <Filter>include\EngineUtilities\Matrix</Filter>
+    </ClInclude>
+    <ClInclude Include="include\EngineUtilities\Memory\TSharedPointer.h">
+      <Filter>include\EngineUtilities\Memory</Filter>
+    </ClInclude>
+    <ClInclude Include="include\EngineUtilities\Memory\TStaticPtr.h">
+      <Filter>include\EngineUtilities\Memory</Filter>
+    </ClInclude>
+    <ClInclude Include="include\EngineUtilities\Memory\TUniquePtr.h">
+      <Filter>include\EngineUtilities\Memory</Filter>
+    </ClInclude>
+    <ClInclude Include="include\EngineUtilities\Memory\TWeakPointer.h">
+      <Filter>include\EngineUtilities\Memory</Filter>
+    </ClInclude>
+    <ClInclude Include="include\EngineUtilities\Vectors\Quaternion.h">
+      <Filter>include\EngineUtilities\Vectors</Filter>
+    </ClInclude>
+    <ClInclude Include="include\EngineUtilities\Vectors\Vector2.h">
+      <Filter>include\EngineUtilities\Vectors</Filter>
+    </ClInclude>
+    <ClInclude Include="include\EngineUtilities\Vectors\Vector3.h">
+      <Filter>include\EngineUtilities\Vectors</Filter>
+    </ClInclude>
+    <ClInclude Include="include\EngineUtilities\Vectors\Vector4.h">
+      <Filter>include\EngineUtilities\Vectors</Filter>
+    </ClInclude>
+    <ClInclude Include="include\EngineUtilities\Utilities\EngineMath.h">
+      <Filter>include\EngineUtilities\Utilities</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -164,27 +230,6 @@
     <ClCompile Include="src\UserInterface.cpp">
       <Filter>source</Filter>
     </ClCompile>
-    <ClCompile Include="Thirdparty\imgui-docking\backends\imgui_impl_dx11.cpp">
-      <Filter>Imgui\src</Filter>
-    </ClCompile>
-    <ClCompile Include="Thirdparty\imgui-docking\backends\imgui_impl_win32.cpp">
-      <Filter>Imgui\src</Filter>
-    </ClCompile>
-    <ClCompile Include="Thirdparty\imgui-docking\imgui_demo.cpp">
-      <Filter>Imgui\src</Filter>
-    </ClCompile>
-    <ClCompile Include="Thirdparty\imgui-docking\imgui_draw.cpp">
-      <Filter>Imgui\src</Filter>
-    </ClCompile>
-    <ClCompile Include="Thirdparty\imgui-docking\imgui_tables.cpp">
-      <Filter>Imgui\src</Filter>
-    </ClCompile>
-    <ClCompile Include="Thirdparty\imgui-docking\imgui_widgets.cpp">
-      <Filter>Imgui\src</Filter>
-    </ClCompile>
-    <ClCompile Include="Thirdparty\imgui-docking\imgui.cpp">
-      <Filter>Imgui\src</Filter>
-    </ClCompile>
     <ClCompile Include="src\ModelLoader.cpp">
       <Filter>source</Filter>
     </ClCompile>
@@ -193,6 +238,27 @@
     </ClCompile>
     <ClCompile Include="src\Screenshot.cpp">
       <Filter>source</Filter>
+    </ClCompile>
+    <ClCompile Include="Imgui\imgui-docking-znly-docking\imgui.cpp">
+      <Filter>Imgui\src</Filter>
+    </ClCompile>
+    <ClCompile Include="Imgui\imgui-docking-znly-docking\imgui_demo.cpp">
+      <Filter>Imgui\src</Filter>
+    </ClCompile>
+    <ClCompile Include="Imgui\imgui-docking-znly-docking\imgui_draw.cpp">
+      <Filter>Imgui\src</Filter>
+    </ClCompile>
+    <ClCompile Include="Imgui\imgui-docking-znly-docking\imgui_tables.cpp">
+      <Filter>Imgui\src</Filter>
+    </ClCompile>
+    <ClCompile Include="Imgui\imgui-docking-znly-docking\imgui_widgets.cpp">
+      <Filter>Imgui\src</Filter>
+    </ClCompile>
+    <ClCompile Include="Imgui\imgui-docking-znly-docking\backends\imgui_impl_dx11.cpp">
+      <Filter>Imgui\src</Filter>
+    </ClCompile>
+    <ClCompile Include="Imgui\imgui-docking-znly-docking\backends\imgui_impl_win32.cpp">
+      <Filter>Imgui\src</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

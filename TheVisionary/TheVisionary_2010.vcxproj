@@ -422,6 +422,13 @@
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Imgui\imgui-docking-znly-docking\backends\imgui_impl_dx11.cpp" />
+    <ClCompile Include="Imgui\imgui-docking-znly-docking\backends\imgui_impl_win32.cpp" />
+    <ClCompile Include="Imgui\imgui-docking-znly-docking\imgui.cpp" />
+    <ClCompile Include="Imgui\imgui-docking-znly-docking\imgui_demo.cpp" />
+    <ClCompile Include="Imgui\imgui-docking-znly-docking\imgui_draw.cpp" />
+    <ClCompile Include="Imgui\imgui-docking-znly-docking\imgui_tables.cpp" />
+    <ClCompile Include="Imgui\imgui-docking-znly-docking\imgui_widgets.cpp" />
     <ClCompile Include="src\BaseApp.cpp" />
     <ClCompile Include="src\BlendState.cpp" />
     <ClCompile Include="src\Buffer.cpp" />
@@ -441,18 +448,19 @@
     <ClCompile Include="src\Viewport.cpp" />
     <ClCompile Include="src\Window.cpp" />
     <ClCompile Include="TheVisionary.cpp" />
-    <ClCompile Include="Thirdparty\imgui-docking\backends\imgui_impl_dx11.cpp" />
-    <ClCompile Include="Thirdparty\imgui-docking\backends\imgui_impl_win32.cpp" />
-    <ClCompile Include="Thirdparty\imgui-docking\imgui.cpp" />
-    <ClCompile Include="Thirdparty\imgui-docking\imgui_demo.cpp" />
-    <ClCompile Include="Thirdparty\imgui-docking\imgui_draw.cpp" />
-    <ClCompile Include="Thirdparty\imgui-docking\imgui_tables.cpp" />
-    <ClCompile Include="Thirdparty\imgui-docking\imgui_widgets.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="TheVisionary.fx" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Imgui\imgui-docking-znly-docking\backends\imgui_impl_dx11.h" />
+    <ClInclude Include="Imgui\imgui-docking-znly-docking\backends\imgui_impl_win32.h" />
+    <ClInclude Include="Imgui\imgui-docking-znly-docking\imconfig.h" />
+    <ClInclude Include="Imgui\imgui-docking-znly-docking\imgui.h" />
+    <ClInclude Include="Imgui\imgui-docking-znly-docking\imgui_internal.h" />
+    <ClInclude Include="Imgui\imgui-docking-znly-docking\imstb_rectpack.h" />
+    <ClInclude Include="Imgui\imgui-docking-znly-docking\imstb_textedit.h" />
+    <ClInclude Include="Imgui\imgui-docking-znly-docking\imstb_truetype.h" />
     <ClInclude Include="include\BaseApp.h" />
     <ClInclude Include="include\BlendState.h" />
     <ClInclude Include="include\Buffer.h" />
@@ -460,6 +468,22 @@
     <ClInclude Include="include\DepthStencilView.h" />
     <ClInclude Include="include\Device.h" />
     <ClInclude Include="include\DeviceContext.h" />
+    <ClInclude Include="include\ECS\Actor.h" />
+    <ClInclude Include="include\ECS\Component.h" />
+    <ClInclude Include="include\ECS\Entity.h" />
+    <ClInclude Include="include\ECS\Transform.h" />
+    <ClInclude Include="include\EngineUtilities\Matrix\Matrix2x2.h" />
+    <ClInclude Include="include\EngineUtilities\Matrix\Matrix3x3.h" />
+    <ClInclude Include="include\EngineUtilities\Matrix\Matrix4x4.h" />
+    <ClInclude Include="include\EngineUtilities\Memory\TSharedPointer.h" />
+    <ClInclude Include="include\EngineUtilities\Memory\TStaticPtr.h" />
+    <ClInclude Include="include\EngineUtilities\Memory\TUniquePtr.h" />
+    <ClInclude Include="include\EngineUtilities\Memory\TWeakPointer.h" />
+    <ClInclude Include="include\EngineUtilities\Utilities\EngineMath.h" />
+    <ClInclude Include="include\EngineUtilities\Vectors\Quaternion.h" />
+    <ClInclude Include="include\EngineUtilities\Vectors\Vector2.h" />
+    <ClInclude Include="include\EngineUtilities\Vectors\Vector3.h" />
+    <ClInclude Include="include\EngineUtilities\Vectors\Vector4.h" />
     <ClInclude Include="include\ModelLoader.h" />
     <ClInclude Include="include\Screenshot.h" />
     <ClInclude Include="include\tiny_obj_loader.h" />
@@ -475,14 +499,6 @@
     <ClInclude Include="include\Viewport.h" />
     <ClInclude Include="include\Window.h" />
     <CLInclude Include="resource.h" />
-    <ClInclude Include="Thirdparty\imgui-docking\backends\imgui_impl_dx11.h" />
-    <ClInclude Include="Thirdparty\imgui-docking\backends\imgui_impl_win32.h" />
-    <ClInclude Include="Thirdparty\imgui-docking\imconfig.h" />
-    <ClInclude Include="Thirdparty\imgui-docking\imgui.h" />
-    <ClInclude Include="Thirdparty\imgui-docking\imgui_internal.h" />
-    <ClInclude Include="Thirdparty\imgui-docking\imstb_rectpack.h" />
-    <ClInclude Include="Thirdparty\imgui-docking\imstb_textedit.h" />
-    <ClInclude Include="Thirdparty\imgui-docking\imstb_truetype.h" />
     <ResourceCompile Include="TheVisionary.rc" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

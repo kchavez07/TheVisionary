@@ -1,89 +1,110 @@
-/**
- * @file DeviceContext.h
- * @brief Declaración de la clase DeviceContext.
- */
-
 #pragma once
 #include "Prerequisites.h"
 
- /**
-  * @class DeviceContext
-  * @brief Encapsula el contexto de dispositivo de Direct3D 11.
-  *
-  * Esta clase es responsable de emitir comandos gráficos al pipeline:
-  * establecer vistas, limpiar buffers y controlar los estados del render.
-  * Cada frame puede tener múltiples llamadas desde este contexto
-  * para definir el comportamiento gráfico.
-  */
-class DeviceContext {
+class
+	DeviceContext {
 public:
-    /** Constructor por defecto. */
-    DeviceContext() = default;
+	DeviceContext() = default;
+	~DeviceContext() = default;
 
-    /** Destructor por defecto. */
-    ~DeviceContext() = default;
+	void
+		init();
 
-    // ===== Ciclo de vida =====
+	void
+		update();
 
-    /** Inicializa el contexto de dispositivo. */
-    void init();
+	void
+		render();
 
-    /** Actualiza lógica por frame (placeholder). */
-    void update();
+	void
+		destroy();
 
-    /** Ejecuta comandos de render por frame (placeholder). */
-    void render();
+	void
+		RSSetViewports(unsigned int NumViewports, const D3D11_VIEWPORT* pViewports);
 
-    /** Libera el contexto de dispositivo. */
-    void destroy();
+	void
+		PSSetShaderResources(unsigned int StartSlot,
+			unsigned int NumViews,
+			ID3D11ShaderResourceView* const* ppShaderResourceViews);
 
-    /** Limpia el estado actual del contexto de render. */
-    void clearState();
+	void
+		IASetInputLayout(ID3D11InputLayout* pInputLayout);
 
-    /** Libera el contexto de dispositivo y pone el puntero en nullptr. */
-    void release();
+	void
+		VSSetShader(ID3D11VertexShader* pVertexShader,
+			ID3D11ClassInstance* const* ppClassInstances,
+			unsigned int NumClassInstances);
+	void
+		PSSetShader(ID3D11PixelShader* pPixelShader,
+			ID3D11ClassInstance* const* ppClassInstances,
+			unsigned int NumClassInstances);
 
-    // ===== Comandos gráficos =====
+	void
+		UpdateSubresource(ID3D11Resource* pDstResource,
+			unsigned int DstSubresource,
+			const D3D11_BOX* pDstBox,
+			const void* pSrcData,
+			unsigned int SrcRowPitch,
+			unsigned int SrcDepthPitch);
 
-    /** Establece las regiones de viewport para el render. */
-    void RSSetViewports(unsigned int numViewports, const D3D11_VIEWPORT* pViewports);
+	void
+		IASetVertexBuffers(unsigned int StartSlot,
+			unsigned int NumBuffers,
+			ID3D11Buffer* const* ppVertexBuffers,
+			const unsigned int* pStrides,
+			const unsigned int* pOffsets);
 
-    /** Limpia el depth-stencil view. */
-    void ClearDepthStencilView(ID3D11DepthStencilView* pDepthStencilView,
-        unsigned int clearFlags,
-        float depth,
-        UINT8 stencil);
+	void
+		IASetIndexBuffer(ID3D11Buffer* pIndexBuffer,
+			DXGI_FORMAT Format,
+			unsigned int Offset);
 
-    /** Limpia un render target con el color especificado. */
-    void ClearRenderTargetView(ID3D11RenderTargetView* pRenderTargetView,
-        const float colorRGBA[4]);
+	void
+		PSSetSamplers(unsigned int StartSlot,
+			unsigned int NumSamplers,
+			ID3D11SamplerState* const* ppSamplers);
 
-    /** Establece los render targets y el depth stencil. */
-    void OMSetRenderTargets(unsigned int numViews,
-        ID3D11RenderTargetView* const* ppRenderTargetViews,
-        ID3D11DepthStencilView* pDepthStencilView);
+	void
+		RSSetState(ID3D11RasterizerState* pRasterizerState);
 
-    /** Define la topología de la geometría para el input assembler. */
-    void IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY topology);
+	void
+		OMSetBlendState(ID3D11BlendState* pBlendState,
+			const float BlendFactor[4],
+			unsigned int SampleMask);
 
-    /** Asigna texturas al shader de píxeles. */
-    void PSSetShaderResources(UINT startSlot,
-        UINT numViews,
-        ID3D11ShaderResourceView* const* ppSRVs);
+	void
+		OMSetRenderTargets(unsigned int NumViews,
+			ID3D11RenderTargetView* const* ppRenderTargetViews,
+			ID3D11DepthStencilView* pDepthStencilView);
 
-    /** Asigna estados de muestreo al shader de píxeles. */
-    void PSSetSamplers(UINT startSlot,
-        UINT numSamplers,
-        ID3D11SamplerState* const* ppSamplers);
+	void
+		IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY Topology);
 
-    /** Dibuja geometría usando índices. */
-    void DrawIndexed(UINT indexCount,
-        UINT startIndexLocation,
-        INT baseVertexLocation);
+	void
+		ClearRenderTargetView(ID3D11RenderTargetView* pRenderTargetView,
+			const float ColorRGBA[4]);
+
+	void
+		ClearDepthStencilView(ID3D11DepthStencilView* pDepthStencilView,
+			unsigned int ClearFlags,
+			float Depth,
+			UINT8 Stencil);
+
+	void
+		VSSetConstantBuffers(unsigned int StartSlot,
+			unsigned int NumBuffers,
+			ID3D11Buffer* const* ppConstantBuffers);
+
+	void
+		PSSetConstantBuffers(unsigned int StartSlot,
+			unsigned int NumBuffers,
+			ID3D11Buffer* const* ppConstantBuffers);
+	void
+		DrawIndexed(unsigned int IndexCount,
+			unsigned int StartIndexLocation,
+			int BaseVertexLocation);
+private:
 
 public:
-    /**
-     * @brief Puntero crudo al contexto de Direct3D 11 (debe estar encapsulado por métodos).
-     */
-    ID3D11DeviceContext* m_deviceContext = nullptr;
+	ID3D11DeviceContext* m_deviceContext = nullptr;
 };
