@@ -227,9 +227,6 @@
     <ClCompile Include="src\ModelLoader.cpp">
       <Filter>source</Filter>
     </ClCompile>
-    <ClCompile Include="src\tiny_obj_loader.cpp">
-      <Filter>source</Filter>
-    </ClCompile>
     <ClCompile Include="src\Screenshot.cpp">
       <Filter>source</Filter>
     </ClCompile>

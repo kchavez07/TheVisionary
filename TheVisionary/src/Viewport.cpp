@@ -1,13 +1,9 @@
-/**
- * @file Viewport.cpp
- * @brief Implementación de la clase Viewport.
- */
-
 #include "Viewport.h"
 #include "Window.h"
 #include "DeviceContext.h"
 
-HRESULT Viewport::init(const Window& window) {
+HRESULT
+Viewport::init(const Window& window) {
 	if (!window.m_hWnd) {
 		ERROR("Viewport", "init", "Window handle (m_hWnd) is nullptr");
 		return E_POINTER;
@@ -27,8 +23,8 @@ HRESULT Viewport::init(const Window& window) {
 	return S_OK;
 }
 
-
-HRESULT Viewport::init(unsigned int width, unsigned int height) {
+HRESULT
+Viewport::init(unsigned int width, unsigned int height) {
 	if (width == 0 || height == 0) {
 		ERROR("Viewport", "init", "Window dimensions are zero.");
 		return E_INVALIDARG;
@@ -49,6 +45,5 @@ void Viewport::render(DeviceContext& deviceContext) {
 		ERROR("Viewport", "render", "Device context is not set.");
 		return;
 	}
-
 	deviceContext.RSSetViewports(1, &m_viewport);
 }

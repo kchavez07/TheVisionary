@@ -1,16 +1,14 @@
-﻿/**
- * @file Window.cpp
- * @brief Implementación de la clase Window.
- */
+﻿#include "Window.h"
 
-#include "Window.h"
-
-HRESULT Window::init(HINSTANCE hInstance, int nCmdShow, WNDPROC wndproc) {
+HRESULT
+Window::init(HINSTANCE hInstance, int nCmdShow, WNDPROC wndproc) {
+    // Store  instance of the class
     m_hInst = hInstance;
 
+    // Register class
     WNDCLASSEX wcex;
     wcex.cbSize = sizeof(WNDCLASSEX);
-    wcex.style = CS_HREDRAW | CS_VREDRAW | CS_OWNDC; // ✅ Agregado CS_OWNDC para ImGui Viewports
+    wcex.style = CS_HREDRAW | CS_VREDRAW;
     wcex.lpfnWndProc = wndproc;
     wcex.cbClsExtra = 0;
     wcex.cbWndExtra = 0;
@@ -28,18 +26,19 @@ HRESULT Window::init(HINSTANCE hInstance, int nCmdShow, WNDPROC wndproc) {
         return E_FAIL;
     }
 
+    // Create window
     RECT rc = { 0, 0, 1200, 1010 };
     m_rect = rc;
+
     AdjustWindowRect(&rc, WS_OVERLAPPEDWINDOW, FALSE);
 
-    m_hWnd = CreateWindow(
-        "TutorialWindowClass",
+    m_hWnd = CreateWindow("TutorialWindowClass",
         m_windowName.c_str(),
         WS_OVERLAPPEDWINDOW,
         CW_USEDEFAULT,
         CW_USEDEFAULT,
-        rc.right - rc.left,
-        rc.bottom - rc.top,
+        m_rect.right - m_rect.left,
+        m_rect.bottom - m_rect.top,
         nullptr,
         nullptr,
         hInstance,
@@ -52,23 +51,25 @@ HRESULT Window::init(HINSTANCE hInstance, int nCmdShow, WNDPROC wndproc) {
     }
 
     ShowWindow(m_hWnd, nCmdShow);
+
     UpdateWindow(m_hWnd);
 
+    // Setup Viewport Dimensions
     GetClientRect(m_hWnd, &m_rect);
     m_width = m_rect.right - m_rect.left;
     m_height = m_rect.bottom - m_rect.top;
-
     return S_OK;
 }
 
-void Window::update() {
-    // No se necesita lógica por ahora
+void
+Window::update() {
 }
 
-void Window::render() {
-    // No se necesita lógica por ahora
+void
+Window::render() {
 }
 
-void Window::destroy() {
-    // No se necesita lógica por ahora
+void
+Window::destroy() {
 }
+
