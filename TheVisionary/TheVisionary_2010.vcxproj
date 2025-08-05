@@ -484,7 +484,11 @@
     <ClInclude Include="include\EngineUtilities\Vectors\Vector3.h" />
     <ClInclude Include="include\EngineUtilities\Vectors\Vector4.h" />
     <ClInclude Include="include\ModelLoader.h" />
+    <ClInclude Include="include\OBJ_Loader.h" />
+    <ClInclude Include="include\Rasterizer.h" />
+    <ClInclude Include="include\SamplerState.h" />
     <ClInclude Include="include\Screenshot.h" />
+    <ClInclude Include="include\stb_image.h" />
     <ClInclude Include="include\UserInterface.h" />
     <ClInclude Include="include\InputLayout.h" />
     <ClInclude Include="include\MeshComponent.h" />
