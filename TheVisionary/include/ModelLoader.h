@@ -40,3 +40,4 @@ public:
 	std::string modelName;
 	std::vector<MeshComponent> meshes;
 };
+

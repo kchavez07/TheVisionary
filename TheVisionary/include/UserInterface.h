@@ -9,7 +9,7 @@ class Window;
 class SwapChain;
 class Texture;
 class Actor;
-//class Model;
+class ModelComponent;
 
 class
     UserInterface {
@@ -42,13 +42,13 @@ public:
         Renderer(Window window, ID3D11ShaderResourceView* renderTexture);
 
     //void
-    //Inspector(std::vector<Model> & models, int index);
+    //Inspector(std::vector<MeshComponent> & models, int index);
 
-    //void
-    //inspectorGeneral(EngineUtilities::TSharedPointer<Actor> actor);
+    void
+        inspectorGeneral(EU::TSharedPointer<Actor> actor);
 
-    //void 
-    //inspectorContainer(EngineUtilities::TSharedPointer<Actor> actor);
+    void
+        inspectorContainer(EU::TSharedPointer<Actor> actor);
 
     void
         output();
@@ -81,6 +81,9 @@ public:
 
     void
         RenderFullScreenTransparentWindow();
+
+    void
+        outliner(const std::vector<EU::TSharedPointer<Actor>>& actors);
 private:
     bool checkboxValue = true;
     bool checkboxValue2 = false;
@@ -88,5 +91,6 @@ private:
     std::vector<const char*> m_tooltips;
 
     bool show_exit_popup = false; // Variable de estado para el popup
-
+public:
+    int selectedActorIndex = -1;
 };

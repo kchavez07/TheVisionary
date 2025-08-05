@@ -486,13 +486,11 @@
     <ClInclude Include="include\EngineUtilities\Vectors\Vector4.h" />
     <ClInclude Include="include\ModelLoader.h" />
     <ClInclude Include="include\Screenshot.h" />
-    <ClInclude Include="include\tiny_obj_loader.h" />
     <ClInclude Include="include\UserInterface.h" />
     <ClInclude Include="include\InputLayout.h" />
     <ClInclude Include="include\MeshComponent.h" />
     <ClInclude Include="include\Prerequisites.h" />
     <ClInclude Include="include\RenderTargetView.h" />
-    <ClInclude Include="include\Resource.h" />
     <ClInclude Include="include\ShaderProgram.h" />
     <ClInclude Include="include\SwapChain.h" />
     <ClInclude Include="include\Texture.h" />

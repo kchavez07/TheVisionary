@@ -12,6 +12,13 @@
 #include <d3dx11.h>
 #include <d3dcompiler.h>
 #include "Resource.h"
+#include "resource.h"
+
+// Third Party Libraries
+#include "EngineUtilities\Memory\TSharedPointer.h"
+#include "EngineUtilities\Memory\TWeakPointer.h"
+#include "EngineUtilities\Memory\TStaticPtr.h"
+#include "EngineUtilities\Memory\TUniquePtr.h"
 
 // MACROS
 #define SAFE_RELEASE(x) if(x != nullptr) x->Release(); x = nullptr;
@@ -71,11 +78,10 @@ enum
     PIXEL_SHADER = 1
 };
 
-// === Variables globales de configuración gráfica ===
-extern bool g_wireframeMode;
-extern bool g_enableRotation;
-extern bool g_autoRotate;
-extern float g_clearColor[4];
-
-extern ID3D11RasterizerState* m_rasterStateDefault;
-extern ID3D11RasterizerState* m_rasterStateWireframe;
+enum
+    ComponentType {
+    NONE = 0,     ///< Tipo de componente no especificado.
+    TRANSFORM = 1,///< Componente de transformación.
+    MESH = 2,     ///< Componente de malla.
+    MATERIAL = 3  ///< Componente de material.
+};
