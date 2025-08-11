@@ -45,6 +45,9 @@
     <Filter Include="include\EngineUtilities\Vectors">
       <UniqueIdentifier>{862d6549-cc7b-460d-9edb-bcdd7548248e}</UniqueIdentifier>
     </Filter>
+    <Filter Include="source\ECS">
+      <UniqueIdentifier>{473a1625-8807-4c9d-811b-e2f46ae65a0f}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\Prerequisites.h">
@@ -262,6 +265,18 @@
     </ClCompile>
     <ClCompile Include="Imgui\imgui-docking-znly-docking\backends\imgui_impl_win32.cpp">
       <Filter>Imgui\src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ECS\Actor.cpp">
+      <Filter>source\ECS</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ECS\Transform.cpp">
+      <Filter>source\ECS</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Rasterizer.cpp">
+      <Filter>source</Filter>
+    </ClCompile>
+    <ClCompile Include="src\SamplerState.cpp">
+      <Filter>source</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

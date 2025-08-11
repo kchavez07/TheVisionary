@@ -1,0 +1,2 @@
+TheVisionary/lib/fbxlibs/libfbxsdk-mt.lib filter=lfs diff=lfs merge=lfs
+TheVisionary/lib/fbxlibs/libfbxsdk-md.lib filter=lfs diff=lfs merge=lfs
