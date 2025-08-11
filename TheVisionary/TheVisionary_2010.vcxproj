@@ -436,7 +436,11 @@
     <ClCompile Include="src\DepthStencilView.cpp" />
     <ClCompile Include="src\Device.cpp" />
     <ClCompile Include="src\DeviceContext.cpp" />
+    <ClCompile Include="src\ECS\Actor.cpp" />
+    <ClCompile Include="src\ECS\Transform.cpp" />
     <ClCompile Include="src\ModelLoader.cpp" />
+    <ClCompile Include="src\Rasterizer.cpp" />
+    <ClCompile Include="src\SamplerState.cpp" />
     <ClCompile Include="src\Screenshot.cpp" />
     <ClCompile Include="src\UserInterface.cpp" />
     <ClCompile Include="src\InputLayout.cpp" />
