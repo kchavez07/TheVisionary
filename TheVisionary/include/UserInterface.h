@@ -11,86 +11,53 @@ class Texture;
 class Actor;
 class ModelComponent;
 
-class
-    UserInterface {
+class UserInterface {
 public:
     UserInterface();
     ~UserInterface();
 
-    void
-        init(void* window, ID3D11Device* device, ID3D11DeviceContext* deviceContext);
+    void init(void* window, ID3D11Device* device, ID3D11DeviceContext* deviceContext);
+    void update();
+    void render();
+    void destroy();
 
-    void
-        update();
+    void vec3Control(const std::string& label,
+        float* values,
+        float resetValues = 0.0f,
+        float columnWidth = 100.0f);
 
-    void
-        render();
+    void menuBar(Window window, SwapChain swapChain, Texture& backBuffer);
+    void Renderer(Window window, ID3D11ShaderResourceView* renderTexture);
 
-    void
-        destroy();
+    void inspectorGeneral(EU::TSharedPointer<Actor> actor);
+    void inspectorContainer(EU::TSharedPointer<Actor> actor);
 
-    void
-        vec3Control(const std::string& label,
-            float* values,
-            float resetValues = 0.0f,
-            float columnWidth = 100.0f);
+    void output();
+    void darkStyle();
+    void greyStyle();
+    void GameMakerStyle();
+    void visualStudioStyle();
 
-    void
-        menuBar(Window window, SwapChain swapChain, Texture& backBuffer);
+    void ToolTip(std::string icon, std::string tip);
+    void ToolTip(std::string tip);
 
-    void
-        Renderer(Window window, ID3D11ShaderResourceView* renderTexture);
+    void toolTipData();
+    void ToolBar();
+    void closeApp();
+    void RenderFullScreenTransparentWindow();
+    void outliner(const std::vector<EU::TSharedPointer<Actor>>& actors);
 
-    //void
-    //Inspector(std::vector<MeshComponent> & models, int index);
+public:
+    int selectedActorIndex = -1;
 
-    void
-        inspectorGeneral(EU::TSharedPointer<Actor> actor);
-
-    void
-        inspectorContainer(EU::TSharedPointer<Actor> actor);
-
-    void
-        output();
-
-    void
-        darkStyle();
-
-    void
-        greyStyle();
-
-    void
-        GameMakerStyle();
-
-    void
-        visualStudioStyle();
-
-    void
-        ToolTip(std::string icon, std::string tip);
-    void
-        ToolTip(std::string tip);
-
-    void
-        toolTipData();
-
-    void
-        ToolBar();
-
-    void
-        closeApp();
-
-    void
-        RenderFullScreenTransparentWindow();
-
-    void
-        outliner(const std::vector<EU::TSharedPointer<Actor>>& actors);
 private:
     bool checkboxValue = true;
     bool checkboxValue2 = false;
     std::vector<const char*> m_objectsNames;
     std::vector<const char*> m_tooltips;
 
-    bool show_exit_popup = false; // Variable de estado para el popup
-public:
-    int selectedActorIndex = -1;
+    bool show_exit_popup = false;
+
+    // >>> NUEVO: para evitar doble shutdown y saber si ImGui está listo
+    bool m_imguiInitialized = false;
 };

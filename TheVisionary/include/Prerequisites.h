@@ -7,6 +7,11 @@
 #include <xnamath.h>
 #include <thread>
 
+#include <algorithm>
+#undef min
+#undef max
+
+
 // Librerias DirectX
 #include <d3d11.h>
 #include <d3dx11.h>

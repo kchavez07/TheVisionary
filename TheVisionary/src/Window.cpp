@@ -72,4 +72,3 @@ Window::render() {
 void
 Window::destroy() {
 }
-

@@ -4,199 +4,210 @@
 #include "Device.h"
 #include "DeviceContext.h"
 
+// Opcional: helper local
+static void SafeRelease(IUnknown*& p) { if (p) { p->Release(); p = nullptr; } }
+
 HRESULT
 Texture::init(Device device, const std::string& textureName, ExtensionType extensionType) {
-	if (!device.m_device) {
-		ERROR("Texture", "init", "Device is null.");
-		return E_POINTER;
-	}
-	if (textureName.empty()) {
-		ERROR("Texture", "init", "Texture name cannot be empty.");
-		return E_INVALIDARG;
-	}
+    if (!device.m_device) {
+        ERROR("Texture", "init", "Device is null.");
+        return E_POINTER;
+    }
+    if (textureName.empty()) {
+        ERROR("Texture", "init", "Texture name cannot be empty.");
+        return E_INVALIDARG;
+    }
 
-	HRESULT hr = S_OK;
+    HRESULT hr = S_OK;
 
-	switch (extensionType) {
-	case DDS: {
-		m_textureName = textureName + ".dds";
+    // Asegúrate de partir sin recursos previos
+    if (m_textureFromImg) { m_textureFromImg->Release(); m_textureFromImg = nullptr; }
+    if (m_texture) { m_texture->Release();        m_texture = nullptr; }
 
-		// Cargar textura DDS
-		hr = D3DX11CreateShaderResourceViewFromFile(
-			device.m_device,
-			m_textureName.c_str(),
-			nullptr,
-			nullptr,
-			&m_textureFromImg,
-			nullptr
-		);
+    switch (extensionType) {
+    case DDS: {
+        m_textureName = textureName + ".dds";
 
-		if (FAILED(hr)) {
-			ERROR("Texture", "init",
-				("Failed to load DDS texture. Verify filepath: " + m_textureName).c_str());
-			return hr;
-		}
-		break;
-	}
+        // Usa la versión A para std::string
+        hr = D3DX11CreateShaderResourceViewFromFileA(
+            device.m_device,
+            m_textureName.c_str(),
+            nullptr,
+            nullptr,
+            &m_textureFromImg,
+            nullptr
+        );
 
-	case PNG: {
-		m_textureName = textureName + ".png";
-		int width, height, channels;
-		unsigned char* data = stbi_load(m_textureName.c_str(), &width, &height, &channels, 4); // 4 bytes por pixel (RGBA)
-		if (!data) {
-			ERROR("Texture", "init",
-				("Failed to load PNG texture: " + std::string(stbi_failure_reason())).c_str());
-			return E_FAIL;
-		}
+        if (FAILED(hr)) {
+            ERROR("Texture", "init",
+                ("Failed to load DDS texture. Verify filepath: " + m_textureName).c_str());
+            return hr;
+        }
+        break;
+    }
 
-		// Crear descripción de textura
-		D3D11_TEXTURE2D_DESC textureDesc = {};
-		textureDesc.Width = width;
-		textureDesc.Height = height;
-		textureDesc.MipLevels = 1;
-		textureDesc.ArraySize = 1;
-		textureDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
-		textureDesc.SampleDesc.Count = 1;
-		textureDesc.Usage = D3D11_USAGE_DEFAULT;
-		textureDesc.BindFlags = D3D11_BIND_SHADER_RESOURCE;
+    case PNG: {
+        m_textureName = textureName + ".png";
+        int width = 0, height = 0, channels = 0;
+        unsigned char* data = stbi_load(m_textureName.c_str(), &width, &height, &channels, 4); // RGBA
+        if (!data) {
+            ERROR("Texture", "init",
+                ("Failed to load PNG texture: " + std::string(stbi_failure_reason())).c_str());
+            return E_FAIL;
+        }
 
-		// Crear datos de subrecarga
-		D3D11_SUBRESOURCE_DATA initData = {};
-		initData.pSysMem = data;
-		initData.SysMemPitch = width * 4;
+        // Descripción de la textura
+        D3D11_TEXTURE2D_DESC textureDesc = {};
+        textureDesc.Width = width;
+        textureDesc.Height = height;
+        textureDesc.MipLevels = 1;
+        textureDesc.ArraySize = 1;
+        textureDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
+        textureDesc.SampleDesc.Count = 1;
+        textureDesc.SampleDesc.Quality = 0;
+        textureDesc.Usage = D3D11_USAGE_DEFAULT;
+        textureDesc.BindFlags = D3D11_BIND_SHADER_RESOURCE;
+        textureDesc.CPUAccessFlags = 0;
+        textureDesc.MiscFlags = 0;
 
-		hr = device.CreateTexture2D(&textureDesc, &initData, &m_texture);
-		stbi_image_free(data); // Liberar los datos de imagen inmediatamente
+        // Datos iniciales
+        D3D11_SUBRESOURCE_DATA initData = {};
+        initData.pSysMem = data;
+        initData.SysMemPitch = width * 4;
 
-		if (FAILED(hr)) {
-			ERROR("Texture", "init", "Failed to create texture from PNG data");
-			return hr;
-		}
+        hr = device.m_device->CreateTexture2D(&textureDesc, &initData, &m_texture);
+        stbi_image_free(data);
 
-		// Crear vista del recurso de la textura
-		D3D11_SHADER_RESOURCE_VIEW_DESC srvDesc = {};
-		srvDesc.Format = textureDesc.Format;
-		srvDesc.ViewDimension = D3D11_SRV_DIMENSION_TEXTURE2D;
-		srvDesc.Texture2D.MipLevels = 1;
+        if (FAILED(hr)) {
+            ERROR("Texture", "init", "Failed to create texture from PNG data");
+            return hr;
+        }
 
-		hr = device.m_device->CreateShaderResourceView(m_texture, &srvDesc, &m_textureFromImg);
-		SAFE_RELEASE(m_texture); // Liberar textura intermedia
+        // Crear SRV
+        D3D11_SHADER_RESOURCE_VIEW_DESC srvDesc = {};
+        srvDesc.Format = textureDesc.Format;
+        srvDesc.ViewDimension = D3D11_SRV_DIMENSION_TEXTURE2D;
+        srvDesc.Texture2D.MipLevels = 1;
+        srvDesc.Texture2D.MostDetailedMip = 0;
 
-		if (FAILED(hr)) {
-			ERROR("Texture", "init", "Failed to create shader resource view for PNG texture");
-			return hr;
-		}
-		break;
-	}
+        hr = device.m_device->CreateShaderResourceView(m_texture, &srvDesc, &m_textureFromImg);
+        // ya no necesitamos la ID3D11Texture2D suelta (la SRV mantiene la referencia al recurso subyacente)
+        SafeRelease(reinterpret_cast<IUnknown*&>(m_texture));
 
-	default:
-		ERROR("Texture", "init", "Unsupported extension type");
-		return E_INVALIDARG;
-	}
+        if (FAILED(hr)) {
+            ERROR("Texture", "init", "Failed to create shader resource view for PNG texture");
+            return hr;
+        }
+        break;
+    }
 
-	return hr;
+    default:
+        ERROR("Texture", "init", "Unsupported extension type");
+        return E_INVALIDARG;
+    }
+
+    return hr;
 }
 
 HRESULT
 Texture::init(Device device,
-	unsigned int width,
-	unsigned int height,
-	DXGI_FORMAT Format,
-	unsigned int BindFlags,
-	unsigned int sampleCount,
-	unsigned int qualityLevels) {
-	if (!device.m_device) {
-		ERROR("Texture", "init", "Device is null.");
-		return E_POINTER;
-	}
-	if (width == 0 || height == 0) {
-		ERROR("Texture", "init", "Width and height must be greater than 0");
-		E_INVALIDARG;
-	}
+    unsigned int width,
+    unsigned int height,
+    DXGI_FORMAT Format,
+    unsigned int BindFlags,
+    unsigned int sampleCount,
+    unsigned int qualityLevels) {
+    if (!device.m_device) {
+        ERROR("Texture", "init", "Device is null.");
+        return E_POINTER;
+    }
+    if (width == 0 || height == 0) {
+        ERROR("Texture", "init", "Width and height must be greater than 0");
+        return E_INVALIDARG; // <- faltaba el return
+    }
 
-	// Config the texture
-	D3D11_TEXTURE2D_DESC desc;
-	memset(&desc, 0, sizeof(desc));
-	desc.Width = width;
-	desc.Height = height;
-	desc.MipLevels = 1;
-	desc.ArraySize = 1;
-	desc.Format = Format;
-	desc.SampleDesc.Count = sampleCount;
-	desc.SampleDesc.Quality = qualityLevels;
-	desc.Usage = D3D11_USAGE_DEFAULT;
-	desc.BindFlags = BindFlags;
-	desc.CPUAccessFlags = 0;
-	desc.MiscFlags = 0;
+    // Limpia previos
+    SafeRelease(reinterpret_cast<IUnknown*&>(m_texture));
+    SafeRelease(reinterpret_cast<IUnknown*&>(m_textureFromImg));
 
-	HRESULT hr = device.CreateTexture2D(&desc, nullptr, &m_texture);
+    D3D11_TEXTURE2D_DESC desc = {};
+    desc.Width = width;
+    desc.Height = height;
+    desc.MipLevels = 1;
+    desc.ArraySize = 1;
+    desc.Format = Format;
+    desc.SampleDesc.Count = sampleCount;
+    desc.SampleDesc.Quality = qualityLevels;
+    desc.Usage = D3D11_USAGE_DEFAULT;
+    desc.BindFlags = BindFlags;
+    desc.CPUAccessFlags = 0;
+    desc.MiscFlags = 0;
 
-	if (FAILED(hr)) {
-		ERROR("Texture", "init",
-			("Failed to create texture with specified params. HRESULT: " + std::to_string(hr)).c_str());
-		return hr;
-	}
+    HRESULT hr = device.m_device->CreateTexture2D(&desc, nullptr, &m_texture);
+    if (FAILED(hr)) {
+        ERROR("Texture", "init",
+            ("Failed to create texture with specified params. HRESULT: " + std::to_string(hr)).c_str());
+        return hr;
+    }
 
-	return S_OK;
+    return S_OK;
 }
 
 HRESULT
 Texture::init(Device& device, Texture& textureRef, DXGI_FORMAT format) {
-	if (!device.m_device) {
-		ERROR("Texture", "init", "Device is null.");
-		return E_POINTER;
-	}
-	if (!textureRef.m_texture) {
-		ERROR("Texture", "init", "Texture is null.");
-		return E_POINTER;
-	}
+    if (!device.m_device) {
+        ERROR("Texture", "init", "Device is null.");
+        return E_POINTER;
+    }
+    if (!textureRef.m_texture) {
+        ERROR("Texture", "init", "Texture is null.");
+        return E_POINTER;
+    }
 
-	// Create Shader Resource View
-	D3D11_SHADER_RESOURCE_VIEW_DESC srvDesc = {};
-	srvDesc.Format = format;
-	srvDesc.ViewDimension = D3D11_SRV_DIMENSION_TEXTURE2D;
-	srvDesc.Texture2D.MipLevels = 1;
-	srvDesc.Texture2D.MostDetailedMip = 0;
+    // Limpia previos
+    SafeRelease(reinterpret_cast<IUnknown*&>(m_textureFromImg));
 
-	HRESULT hr = device.m_device->CreateShaderResourceView(textureRef.m_texture,
-		&srvDesc,
-		&m_textureFromImg);
+    D3D11_SHADER_RESOURCE_VIEW_DESC srvDesc = {};
+    srvDesc.Format = format;
+    srvDesc.ViewDimension = D3D11_SRV_DIMENSION_TEXTURE2D;
+    srvDesc.Texture2D.MipLevels = 1;
+    srvDesc.Texture2D.MostDetailedMip = 0;
 
-	if (FAILED(hr)) {
-		ERROR("Texture", "init",
-			("Failed to create shader resource view for PNG textures. HRESULT: " + std::to_string(hr)).c_str());
-		return hr;
-	}
+    HRESULT hr = device.m_device->CreateShaderResourceView(
+        textureRef.m_texture, &srvDesc, &m_textureFromImg);
 
-	return S_OK;
+    if (FAILED(hr)) {
+        ERROR("Texture", "init",
+            ("Failed to create shader resource view. HRESULT: " + std::to_string(hr)).c_str());
+        return hr;
+    }
+
+    return S_OK;
 }
 
 void Texture::update() {
-
+    // no-op
 }
 
 void
 Texture::render(DeviceContext& deviceContext,
-	unsigned int StartSlot,
-	unsigned int NumViews) {
-	if (!deviceContext.m_deviceContext) {
-		ERROR("DepthStencilView", "render", "Device context is null.");
-		return;
-	}
+    unsigned int StartSlot,
+    unsigned int NumViews) {
+    if (!deviceContext.m_deviceContext) {
+        ERROR("Texture", "render", "Device context is null.");
+        return;
+    }
 
-	if (m_textureFromImg) {
-		ID3D11ShaderResourceView* nullSRV[] = { nullptr };
-		deviceContext.m_deviceContext->PSSetShaderResources(StartSlot, NumViews, nullSRV);
-		deviceContext.m_deviceContext->PSSetShaderResources(StartSlot, NumViews, &m_textureFromImg);
-	}
+    // Solo enlaza si tienes SRV (texturas de imagen). El backbuffer NO tiene SRV.
+    if (m_textureFromImg) {
+        // En la mayoría de casos NumViews = 1. Si usas más, crea un array y pásalo.
+        ID3D11ShaderResourceView* srv = m_textureFromImg;
+        deviceContext.m_deviceContext->PSSetShaderResources(StartSlot, 1, &srv);
+    }
 }
 
 void Texture::destroy() {
-	if (m_texture != nullptr) {
-		SAFE_RELEASE(m_texture);
-	}
-	else if (m_textureFromImg != nullptr) {
-		SAFE_RELEASE(m_textureFromImg);
-	}
+    // Libera ambos independientemente (no usar else-if)
+    SafeRelease(reinterpret_cast<IUnknown*&>(m_textureFromImg));
+    SafeRelease(reinterpret_cast<IUnknown*&>(m_texture));
 }
-

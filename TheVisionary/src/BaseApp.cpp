@@ -1,128 +1,173 @@
 ﻿#include "BaseApp.h"
+#include "ECS/Transform.h"
+#include "imgui.h"
+
+// Color de limpieza
+static const float kClear[4] = { 0.0f, 0.125f, 0.30f, 1.0f };
 
 HRESULT BaseApp::init()
 {
     HRESULT hr = S_OK;
 
+    // 1) SwapChain + Device + Context + BackBuffer  (sin MSAA para evitar mismatches)
     hr = m_swapChain.init(m_device, m_deviceContext, m_backBuffer, m_window);
-
     if (FAILED(hr)) {
-        ERROR("Main", "InitDevice",
-            ("Failed to initialize SwpaChian. HRESULT: " + std::to_string(hr)).c_str());
+        ERROR("Main", "InitDevice", ("Failed to initialize SwapChain. hr=" + std::to_string(hr)).c_str());
         return hr;
     }
 
+    // 2) RenderTargetView sobre el backbuffer
     hr = m_renderTargetView.init(m_device, m_backBuffer, DXGI_FORMAT_R8G8B8A8_UNORM);
-
     if (FAILED(hr)) {
-        ERROR("Main", "InitDevice",
-            ("Failed to initialize RenderTargetView. HRESULT: " + std::to_string(hr)).c_str());
+        ERROR("Main", "InitDevice", ("Failed to initialize RenderTargetView. hr=" + std::to_string(hr)).c_str());
         return hr;
     }
 
-    // Crear textura de depth stencil.
-    hr = m_depthStencil.init(m_device,
+    // 3) DepthStencil (textura + view) con sampleCount=1 (igual al swapchain)
+    hr = m_depthStencil.init(
+        m_device,
         m_window.m_width,
         m_window.m_height,
         DXGI_FORMAT_D24_UNORM_S8_UINT,
         D3D11_BIND_DEPTH_STENCIL,
-        4,
-        0);
-
+        1,      // <- IMPORTANT: igual que swapchain
+        0
+    );
     if (FAILED(hr)) {
-        ERROR("Main", "InitDevice",
-            ("Failed to initialize DepthStencil. HRESULT: " + std::to_string(hr)).c_str());
+        ERROR("Main", "InitDevice", ("Failed to initialize DepthStencil texture. hr=" + std::to_string(hr)).c_str());
         return hr;
     }
 
-    // Crear el depth stencil view
-    hr = m_depthStencilView.init(m_device,
-        m_depthStencil,
-        DXGI_FORMAT_D24_UNORM_S8_UINT);
-
+    hr = m_depthStencilView.init(m_device, m_depthStencil, DXGI_FORMAT_D24_UNORM_S8_UINT);
     if (FAILED(hr)) {
-        ERROR("Main", "InitDevice",
-            ("Failed to initialize DepthStencilView. HRESULT: " + std::to_string(hr)).c_str());
+        ERROR("Main", "InitDevice", ("Failed to initialize DepthStencilView. hr=" + std::to_string(hr)).c_str());
         return hr;
     }
 
-    // Crear el m_viewport
+    // 4) Viewport
     hr = m_viewport.init(m_window);
-
     if (FAILED(hr)) {
-        ERROR("Main", "InitDevice",
-            ("Failed to initialize Viewport. HRESULT: " + std::to_string(hr)).c_str());
+        ERROR("Main", "InitDevice", ("Failed to initialize Viewport. hr=" + std::to_string(hr)).c_str());
         return hr;
     }
 
-    // Definir el layout de entrada
-    std::vector<D3D11_INPUT_ELEMENT_DESC> Layout;
+    // 5) InputLayout (POSITION, TEXCOORD)
+    std::vector<D3D11_INPUT_ELEMENT_DESC> layout;
+    {
+        D3D11_INPUT_ELEMENT_DESC pos{};
+        pos.SemanticName = "POSITION";
+        pos.SemanticIndex = 0;
+        pos.Format = DXGI_FORMAT_R32G32B32_FLOAT;
+        pos.InputSlot = 0;
+        pos.AlignedByteOffset = D3D11_APPEND_ALIGNED_ELEMENT;
+        pos.InputSlotClass = D3D11_INPUT_PER_VERTEX_DATA;
+        pos.InstanceDataStepRate = 0;
+        layout.push_back(pos);
 
-    D3D11_INPUT_ELEMENT_DESC position;
-    position.SemanticName = "POSITION";
-    position.SemanticIndex = 0;
-    position.Format = DXGI_FORMAT_R32G32B32_FLOAT;
-    position.InputSlot = 0;
-    position.AlignedByteOffset = D3D11_APPEND_ALIGNED_ELEMENT /*0*/;
-    position.InputSlotClass = D3D11_INPUT_PER_VERTEX_DATA;
-    position.InstanceDataStepRate = 0;
-    Layout.push_back(position);
+        D3D11_INPUT_ELEMENT_DESC uv{};
+        uv.SemanticName = "TEXCOORD";
+        uv.SemanticIndex = 0;
+        uv.Format = DXGI_FORMAT_R32G32_FLOAT;
+        uv.InputSlot = 0;
+        uv.AlignedByteOffset = D3D11_APPEND_ALIGNED_ELEMENT;
+        uv.InputSlotClass = D3D11_INPUT_PER_VERTEX_DATA;
+        uv.InstanceDataStepRate = 0;
+        layout.push_back(uv);
+    }
 
-    D3D11_INPUT_ELEMENT_DESC texcoord;
-    texcoord.SemanticName = "TEXCOORD";
-    texcoord.SemanticIndex = 0;
-    texcoord.Format = DXGI_FORMAT_R32G32_FLOAT;
-    texcoord.InputSlot = 0;
-    texcoord.AlignedByteOffset = D3D11_APPEND_ALIGNED_ELEMENT /*12*/;
-    texcoord.InputSlotClass = D3D11_INPUT_PER_VERTEX_DATA;
-    texcoord.InstanceDataStepRate = 0;
-    Layout.push_back(texcoord);
-
-    // Create the Shader Program
-    hr = m_shaderProgram.init(m_device, "TheVisionary.fx", Layout);
-
+    // --- 6) Shaders (.fx) ---
+    hr = m_shaderProgram.init(m_device, "TheVisionary.fx", layout);  // <- usa aquí el .fx real en tu bin
     if (FAILED(hr)) {
-        ERROR("Main", "InitDevice",
-            ("Failed to initialize ShaderProgram. HRESULT: " + std::to_string(hr)).c_str());
+        ERROR("Main", "InitDevice", ("Failed to initialize ShaderProgram. hr=" + std::to_string(hr)).c_str());
         return hr;
     }
 
-    // Set Drake Pistol Actor
-    m_ADrakePistol = EU::MakeShared<Actor>(m_device);
+    // --- 7) Constant Buffers (cámara) ---
+    hr = m_neverChanges.init(m_device, sizeof(CBNeverChanges));
+    if (FAILED(hr)) {
+        ERROR("Main", "InitDevice", ("Failed to create CB NeverChanges. hr=" + std::to_string(hr)).c_str());
+        return hr;
+    }
+    hr = m_changeOnResize.init(m_device, sizeof(CBChangeOnResize));
+    if (FAILED(hr)) {
+        ERROR("Main", "InitDevice", ("Failed to create CB ChangeOnResize. hr=" + std::to_string(hr)).c_str());
+        return hr;
+    }
 
-    if (!m_ADrakePistol.isNull()) {
-        // Crear vertex buffer y index buffer para el pistol
-        DrakePistol = m_modelLoader.LoadOBJModel("Models/drakefire_pistol_low.obj");
+    // --- 8) Matrices de cámara ---
+    {
+        XMVECTOR Eye = XMVectorSet(0.0f, 3.0f, -6.0f, 0.0f);
+        XMVECTOR At = XMVectorSet(0.0f, 1.0f, 0.0f, 0.0f);
+        XMVECTOR Up = XMVectorSet(0.0f, 1.0f, 0.0f, 0.0f);
 
-        // Cargar la textura
-        hr = m_drakePistolTexture.init(m_device, "Textures/GunAlbedo", DDS);
-        if (FAILED(hr)) {
-            ERROR("Main", "InitDevice",
-                ("Failed to initialize DrakePistol Texture. HRESULT: " + std::to_string(hr)).c_str());
-            return hr;
+        m_View = XMMatrixLookAtLH(Eye, At, Up);
+        cbNeverChanges.mView = XMMatrixTranspose(m_View);
+
+        m_Projection = XMMatrixPerspectiveFovLH(
+            XM_PIDIV4,
+            m_window.m_width / (FLOAT)m_window.m_height,
+            0.01f, 100.0f
+        );
+        cbChangesOnResize.mProjection = XMMatrixTranspose(m_Projection);
+    }
+
+    // --- 9) Actor: Ninja (FBX) ---
+    {
+        auto ninja = EU::MakeShared<Actor>(m_device);
+        if (ninja.isNull()) {
+            ERROR("Main", "InitDevice", "Failed to create Ninja Actor.");
+            return E_FAIL;
         }
-        std::vector<MeshComponent> DrakePistolMeshes;
-        DrakePistolMeshes.push_back(DrakePistol);
-        std::vector<Texture> DrakePistolTextures;
-        DrakePistolTextures.push_back(m_drakePistolTexture);
-        m_ADrakePistol->setMesh(m_device, DrakePistolMeshes);
-        m_ADrakePistol->setTextures(DrakePistolTextures);
 
-        m_actors.push_back(m_ADrakePistol);
-        m_ADrakePistol->getComponent<Transform>()->setTransform(EU::Vector3(0.0f, 1.7f, 0.0f),
-            EU::Vector3(0.0f, 1.5f, 0.0f),
-            EU::Vector3(1.0f, 1.0f, 1.0f));
-        m_ADrakePistol->setCastShadow(false);
+        const std::string kFBX = "ModelsFBX\\NinjaObscurity\\Ninja of Obscurity v02.fbx";
+        if (!m_modelLoader.LoadFBXModel(kFBX) || m_modelLoader.meshes.empty()) {
+            ERROR("Main", "InitDevice", ("Failed to load Ninja FBX: " + kFBX).c_str());
+            return E_FAIL;
+        }
+
+        // Malla(s)
+        ninja->setMesh(m_device, m_modelLoader.meshes);
+
+        // Textura principal (intenta PNG y luego DDS)
+        Texture ninjaSkin;
+        HRESULT th = ninjaSkin.init(m_device, "ModelsFBX\\NinjaObscurity\\ninja_skin_01", PNG);
+        if (FAILED(th)) {
+            th = ninjaSkin.init(m_device, "ModelsFBX\\NinjaObscurity\\ninja_skin_01", DDS);
+        }
+
+        std::vector<Texture> ninjaTex;
+        if (SUCCEEDED(th)) {
+            ninjaTex.push_back(ninjaSkin);
+        }
+        else {
+            // Fallback a textura por defecto
+            Texture fallback;
+            if (SUCCEEDED(fallback.init(m_device, "Textures\\Default", DDS)) ||
+                SUCCEEDED(fallback.init(m_device, "Textures\\Default", PNG))) {
+                ninjaTex.push_back(fallback);
+            }
+        }
+        ninja->setTextures(ninjaTex);
+
+        // Transform (FBX suele venir grande)
+        ninja->getComponent<Transform>()->setTransform(
+            EU::Vector3(0.0f, 0.0f, 0.0f),    // pos
+            EU::Vector3(0.0f, 0.0f, 0.0f),    // rot
+            EU::Vector3(0.01f, 0.01f, 0.01f)  // scale
+        );
+        ninja->setCastShadow(false);
+
+        m_actors.push_back(ninja);
     }
-    else {
-        ERROR("Main", "InitDevice", "Failed to create Drake Pistol Actor.");
-        return E_FAIL;
-    }
 
-    // Set Plane Actor
-    m_APlane = EU::MakeShared<Actor>(m_device);
+    // --- 10) Actor: Plano simple ---
+    {
+        m_APlane = EU::MakeShared<Actor>(m_device);
+        if (m_APlane.isNull()) {
+            ERROR("Main", "InitDevice", "Failed to create Plane Actor.");
+            return E_FAIL;
+        }
 
-    if (!m_APlane.isNull()) {
         SimpleVertex planeVertices[] =
         {
             { XMFLOAT3(-20.0f, 0.0f, -20.0f), XMFLOAT2(0.0f, 0.0f) },
@@ -130,204 +175,228 @@ HRESULT BaseApp::init()
             { XMFLOAT3(20.0f, 0.0f,  20.0f), XMFLOAT2(1.0f, 1.0f) },
             { XMFLOAT3(-20.0f, 0.0f,  20.0f), XMFLOAT2(0.0f, 1.0f) },
         };
+        WORD planeIndices[] = { 0,2,1, 0,3,2 };
 
-        WORD planeIndices[] =
-        {
-            0, 2, 1,
-            0, 3, 2
-        };
-
-        // Store the vertex data
-        for (int i = 0; i < 4; i++) {
-            planeMesh.m_vertex.push_back(planeVertices[i]);
-        }
-        // Store the index data
-        for (int i = 0; i < 6; i++) {
-            planeMesh.m_index.push_back(planeIndices[i]);
-        }
-
+        planeMesh.m_vertex.assign(planeVertices, planeVertices + 4);
+        planeMesh.m_index.assign(planeIndices, planeIndices + 6);
         planeMesh.m_numVertex = 4;
         planeMesh.m_numIndex = 6;
 
-        // Cargar la textura
-        hr = m_PlaneTexture.init(m_device, "Textures/Default", DDS);
-        if (FAILED(hr)) {
-            ERROR("Main", "InitDevice",
-                ("Failed to initialize DrakePistol Texture. HRESULT: " + std::to_string(hr)).c_str());
-            return hr;
-        }
-        std::vector<MeshComponent> PlaneMeshes;
-        PlaneMeshes.push_back(planeMesh);
-        std::vector<Texture> PlaneTextures;
-        PlaneTextures.push_back(m_PlaneTexture);
-        m_APlane->setMesh(m_device, PlaneMeshes);
-        m_APlane->setTextures(PlaneTextures);
+        // Textura del plano (Default)
+        hr = m_PlaneTexture.init(m_device, "Textures\\Default", DDS);
+        if (FAILED(hr)) hr = m_PlaneTexture.init(m_device, "Textures\\Default", PNG);
 
-        m_APlane->getComponent<Transform>()->setTransform(EU::Vector3(0.0f, -5.0f, 0.0f),
+        std::vector<MeshComponent> planeMeshes{ planeMesh };
+        std::vector<Texture>      planeTextures{ m_PlaneTexture };
+
+        m_APlane->setMesh(m_device, planeMeshes);
+        m_APlane->setTextures(planeTextures);
+        m_APlane->getComponent<Transform>()->setTransform(
+            EU::Vector3(0.0f, -5.0f, 0.0f),
             EU::Vector3(0.0f, 0.0f, 0.0f),
-            EU::Vector3(1.0f, 1.0f, 1.0f));
+            EU::Vector3(1.0f, 1.0f, 1.0f)
+        );
         m_APlane->setCastShadow(false);
         m_actors.push_back(m_APlane);
     }
-    else {
-        ERROR("Main", "InitDevice", "Failed to create Plane Actor.");
-        return E_FAIL;
-    }
 
-    // Crear los constant buffers (Camera)
-    hr = m_neverChanges.init(m_device, sizeof(CBNeverChanges));
-    if (FAILED(hr)) {
-        ERROR("Main", "InitDevice",
-            ("Failed to initialize NeverChanges Buffer. HRESULT: " + std::to_string(hr)).c_str());
-        return hr;
-    }
+    // --- 11) Luz ---
+    m_LightPos = XMFLOAT4(2.0f, 4.0f, -2.0f, 1.0f);
 
-    hr = m_changeOnResize.init(m_device, sizeof(CBChangeOnResize));
-    if (FAILED(hr)) {
-        ERROR("Main", "InitDevice",
-            ("Failed to initialize ChangeOnResize Buffer. HRESULT: " + std::to_string(hr)).c_str());
-        return hr;
-    }
-
-    // Inicializar las matrices de mundo, vista y proyección
-    XMVECTOR Eye = XMVectorSet(0.0f, 3.0f, -6.0f, 0.0f);
-    XMVECTOR At = XMVectorSet(0.0f, 1.0f, 0.0f, 0.0f);
-    XMVECTOR Up = XMVectorSet(0.0f, 1.0f, 0.0f, 0.0f);
-    m_View = XMMatrixLookAtLH(Eye, At, Up);
-
-    // Actualizar la matriz de proyección
-    cbNeverChanges.mView = XMMatrixTranspose(m_View);
-    m_Projection = XMMatrixPerspectiveFovLH(XM_PIDIV4, m_window.m_width / (FLOAT)m_window.m_height, 0.01f, 100.0f);
-    cbChangesOnResize.mProjection = XMMatrixTranspose(m_Projection);
-
-    m_LightPos = XMFLOAT4(2.0f, 4.0f, -2.0f, 1.0f); // Posición de la luz
-    // Initialize User Interface
-
-    m_userInterface.init(m_window.m_hWnd,
+    // --- 12) ImGui (al final del init gráfico) ---
+    m_userInterface.init(
+        m_window.m_hWnd,
         m_device.m_device,
-        m_deviceContext.m_deviceContext);
+        m_deviceContext.m_deviceContext
+    );
+
     return S_OK;
+
 }
 
-void
-BaseApp::update() {
+void BaseApp::update()
+{
+    // --- UI frame ---
     m_userInterface.update();
-    bool show_demo_window = true;
 
-    m_userInterface.inspectorGeneral(m_actors[m_userInterface.selectedActorIndex]);
+    // Inspector + Outliner (tal cual lo tenías)
+    if (!m_actors.empty())
+    {
+        if (m_userInterface.selectedActorIndex < 0 ||
+            m_userInterface.selectedActorIndex >= (int)m_actors.size())
+        {
+            m_userInterface.selectedActorIndex = 0;
+        }
+        m_userInterface.inspectorGeneral(m_actors[m_userInterface.selectedActorIndex]);
+    }
     m_userInterface.outliner(m_actors);
 
-    // Actualizar tiempo (mismo que antes)
+    // --- Tiempo ---
     static float t = 0.0f;
-    if (m_swapChain.m_driverType == D3D_DRIVER_TYPE_REFERENCE)
-    {
-        t += (float)XM_PI * 0.0125f;
-    }
-    else
-    {
-        static DWORD dwTimeStart = 0;
-        DWORD dwTimeCur = GetTickCount();
-        if (dwTimeStart == 0)
-            dwTimeStart = dwTimeCur;
-        t = (dwTimeCur - dwTimeStart) / 1000.0f;
-    }
+    static DWORD t0 = 0;
+    DWORD tNow = GetTickCount();
+    if (t0 == 0) t0 = tNow;
+    t = (tNow - t0) / 1000.0f;
 
-    // Actualizar la matriz de proyección y vista
+    // ----------------------------------------------------
+    // CONTROLES DE CÁMARA (RMB orbitar, rueda zoom, MMB pan)
+    // ----------------------------------------------------
+    {
+        ImGuiIO& io = ImGui::GetIO();
+        bool uiCapturaMouse = io.WantCaptureMouse;
+
+        static bool orbitando = false, paneando = false;
+        static POINT ultimo{};
+
+        if (!uiCapturaMouse)
+        {
+            // ORBIT (RMB)
+            if (GetAsyncKeyState(VK_RBUTTON) & 0x8000)
+            {
+                POINT p; GetCursorPos(&p);
+                if (!orbitando) { orbitando = true; ultimo = p; }
+                float dx = float(p.x - ultimo.x);
+                float dy = float(p.y - ultimo.y);
+                m_camYawDeg += dx * 0.25f;
+                m_camPitchDeg -= dy * 0.25f;
+                m_camPitchDeg = std::clamp(m_camPitchDeg, -89.0f, 89.0f);
+                ultimo = p;
+            }
+            else orbitando = false;
+
+            // ZOOM (rueda)
+            if (io.MouseWheel != 0.0f)
+            {
+                m_camDistance *= (io.MouseWheel > 0 ? 0.9f : 1.1f);
+                m_camDistance = std::clamp(m_camDistance, 2.0f, 50.0f);
+            }
+
+            // PAN (MMB)
+            if (GetAsyncKeyState(VK_MBUTTON) & 0x8000)
+            {
+                POINT p; GetCursorPos(&p);
+                if (!paneando) { paneando = true; ultimo = p; }
+                float dx = float(p.x - ultimo.x);
+                float dy = float(p.y - ultimo.y);
+                ultimo = p;
+
+                float yaw = XMConvertToRadians(m_camYawDeg);
+                float pitch = XMConvertToRadians(m_camPitchDeg);
+
+                XMVECTOR forward = XMVectorSet(sinf(yaw) * cosf(pitch), sinf(pitch),
+                    cosf(yaw) * cosf(pitch), 0);
+                XMVECTOR right = XMVector3Normalize(XMVector3Cross(XMVectorSet(0, 1, 0, 0), forward));
+                XMVECTOR up = XMVectorSet(0, 1, 0, 0);
+
+                float panSpeed = m_camDistance * 0.0025f;
+                XMVECTOR delta = -dx * panSpeed * right + dy * panSpeed * up;
+
+                m_camTarget.x += XMVectorGetX(delta);
+                m_camTarget.y += XMVectorGetY(delta);
+                m_camTarget.z += XMVectorGetZ(delta);
+            }
+            else paneando = false;
+        }
+
+        // Recalcular la vista (m_View) con yaw/pitch/distancia/target
+        {
+            float yaw = XMConvertToRadians(m_camYawDeg);
+            float pitch = XMConvertToRadians(m_camPitchDeg);
+            float cy = cosf(yaw), sy = sinf(yaw);
+            float cp = cosf(pitch), sp = sinf(pitch);
+
+            XMVECTOR eye = XMVectorSet(m_camTarget.x + sy * cp * m_camDistance,
+                m_camTarget.y + sp * m_camDistance,
+                m_camTarget.z + cy * cp * m_camDistance, 1.0f);
+            XMVECTOR at = XMVectorSet(m_camTarget.x, m_camTarget.y, m_camTarget.z, 1.0f);
+            XMVECTOR up = XMVectorSet(0, 1, 0, 0);
+
+            m_View = XMMatrixLookAtLH(eye, at, up);
+        }
+    }
+    // ----------------------------------------------------
+
+    // --- Subir cbuffers de cámara (igual que lo tenías) ---
     cbNeverChanges.mView = XMMatrixTranspose(m_View);
     m_neverChanges.update(m_deviceContext, nullptr, 0, nullptr, &cbNeverChanges, 0, 0);
+
     cbChangesOnResize.mProjection = XMMatrixTranspose(m_Projection);
     m_changeOnResize.update(m_deviceContext, nullptr, 0, nullptr, &cbChangesOnResize, 0, 0);
 
-    // Update Drake Pistol Actor
-    for (auto& actor : m_actors) {
-        actor->update(0, m_deviceContext);
-    }
+    // --- Actores ---
+    for (auto& a : m_actors)
+        if (!a.isNull())
+            a->update(t, m_deviceContext);
 }
 
-void
-BaseApp::render() {
-    // Limpiar el back buffer y el depth buffer
-    m_renderTargetView.render(m_deviceContext, m_depthStencilView, 1, ClearColor);
 
-    // Set Viewport
+void BaseApp::render() {
+    // Limpiar y bind RTV/DSV
+    m_renderTargetView.render(m_deviceContext, m_depthStencilView, 1, kClear);
     m_viewport.render(m_deviceContext);
-
     m_depthStencilView.render(m_deviceContext);
 
-    // Configurar los buffers y shaders para el pipeline
+    // Pipeline
     m_shaderProgram.render(m_deviceContext);
 
-    // Asignar buffers constantes Camera
+    // Constantes
     m_neverChanges.render(m_deviceContext, 0, 1);
     m_changeOnResize.render(m_deviceContext, 1, 1);
 
-    //------------- Renderizar la Pistola-------------//
-    for (auto& actor : m_actors) {
-        actor->render(m_deviceContext);
-    }
+    // Dibujo de actores
+    for (auto& a : m_actors) if (!a.isNull()) a->render(m_deviceContext);
 
-    // Renderizar la interfaz de usuario y mostrar la imagen
+    // UI + Present
     m_userInterface.render();
-
-    // Presentar el back buffer al front buffer
     m_swapChain.present();
 }
 
-void
-BaseApp::destroy() {
+void BaseApp::destroy() {
+    // Cierra ImGui correctamente (evita Live Objects)
     m_userInterface.destroy();
-    if (m_deviceContext.m_deviceContext) m_deviceContext.m_deviceContext->ClearState();
+
+    if (m_deviceContext.m_deviceContext)
+        m_deviceContext.m_deviceContext->ClearState();
+
+    for (auto& a : m_actors) if (!a.isNull()) a->destroy();
+    m_actors.clear();
 
     m_neverChanges.destroy();
     m_changeOnResize.destroy();
-
     m_shaderProgram.destroy();
     m_depthStencil.destroy();
     m_depthStencilView.destroy();
     m_renderTargetView.destroy();
     m_swapChain.destroy();
+
     if (m_deviceContext.m_deviceContext) m_deviceContext.m_deviceContext->Release();
-    if (m_device.m_device) m_device.m_device->Release();
+    if (m_device.m_device)               m_device.m_device->Release();
 }
 
-int
-BaseApp::run(HINSTANCE hInstance,
-    HINSTANCE hPrevInstance,
-    LPWSTR lpCmdLine,
-    int nCmdShow,
-    WNDPROC wndproc) {
+int BaseApp::run(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLine, int nCmdShow, WNDPROC wndproc) {
     UNREFERENCED_PARAMETER(hPrevInstance);
     UNREFERENCED_PARAMETER(lpCmdLine);
 
-    if (FAILED(m_window.init(hInstance, nCmdShow, wndproc))) {
+    if (FAILED(m_window.init(hInstance, nCmdShow, wndproc)))
         return 0;
-
-    }
 
     if (FAILED(init())) {
         destroy();
         return 0;
     }
 
-    // Bucle principal de mensajes
     MSG msg = { 0 };
-    while (WM_QUIT != msg.message)
-    {
-        if (PeekMessage(&msg, NULL, 0, 0, PM_REMOVE))
-        {
+    while (WM_QUIT != msg.message) {
+        if (PeekMessage(&msg, nullptr, 0, 0, PM_REMOVE)) {
             TranslateMessage(&msg);
             DispatchMessage(&msg);
         }
-        else
-        {
-            // Actualiza la lógica de la escena
+        else {
             update();
-            // Renderiza la escena
             render();
         }
     }
 
     destroy();
-
     return (int)msg.wParam;
 }
