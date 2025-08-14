@@ -1,3 +1,8 @@
+/**
+ * @file Rasterizer.cpp
+ * @brief Creación y aplicación del estado de rasterización (cull/fill) en D3D11.
+ */
+
 #include "Rasterizer.h"
 #include "Device.h"
 #include "DeviceContext.h"

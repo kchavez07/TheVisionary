@@ -1,3 +1,8 @@
+/**
+ * @file SwapChain.h
+ * @brief Encapsula la creación y gestión del swap chain.
+ */
+
 #pragma once
 #include "Prerequisites.h"
 
@@ -6,50 +11,54 @@ class DeviceContext;
 class Window;
 class Texture;
 
-class
-	SwapChain {
+/**
+ * @class SwapChain
+ * @brief Maneja el intercambio de buffers (front/back) y la configuración de MSAA.
+ */
+class SwapChain {
 public:
-	SwapChain() = default;
-	~SwapChain() = default;
+    /** Constructor por defecto. */
+    SwapChain() = default;
+    /** Destructor por defecto. */
+    ~SwapChain() = default;
 
-	HRESULT
-		init(Device& device,
-			DeviceContext& deviceContext,
-			Texture& backBuffer,
-			Window window);
+    /**
+     * @brief Inicializa el swap chain.
+     * @param device Dispositivo Direct3D 11.
+     * @param deviceContext Contexto de dispositivo.
+     * @param backBuffer Textura de back buffer.
+     * @param window Ventana asociada.
+     * @return HRESULT indicando el resultado.
+     */
+    HRESULT init(Device& device,
+        DeviceContext& deviceContext,
+        Texture& backBuffer,
+        Window window);
 
-	void
-		update();
+    /** Actualiza el estado del swap chain. */
+    void update();
 
-	void
-		render();
+    /** Renderiza el contenido del swap chain. */
+    void render();
 
-	void
-		destroy();
+    /** Libera los recursos del swap chain. */
+    void destroy();
 
-	void
-		present();
+    /** Presenta el back buffer en pantalla. */
+    void present();
 
 public:
-	IDXGISwapChain* m_swapChain = nullptr;
-	D3D_DRIVER_TYPE m_driverType = D3D_DRIVER_TYPE_NULL;
+    IDXGISwapChain* m_swapChain = nullptr; ///< Puntero al swap chain.
+    D3D_DRIVER_TYPE m_driverType = D3D_DRIVER_TYPE_NULL; ///< Tipo de driver utilizado.
+
 private:
-	D3D_FEATURE_LEVEL m_featureLevel = D3D_FEATURE_LEVEL_11_0;
-	// MSAA Configuration
-	/*
-	 * Para evitar que los píxeles se vean con un efecto de "serrucho" (aliasing) en DirectX 11 con C++,
-	 * se puede utilizar una técnica llamada anti-aliasing.
-	 *
-	 * Multisample Anti-Aliasing (MSAA)
-	 * MSAA es una técnica que suaviza los bordes de los objetos al muestrear varios puntos por píxel.
-	 * Para habilitar MSAA en DirectX 11:
-	 *
-	 */
-	unsigned int m_sampleCount;  // Number of MSAA samples (4x MSAA)
-	unsigned int m_qualityLevels;
+    D3D_FEATURE_LEVEL m_featureLevel = D3D_FEATURE_LEVEL_11_0; ///< Nivel de características de D3D.
 
-	// Punteros a las interfaces DXGI
-	IDXGIDevice* m_dxgiDevice = nullptr;
-	IDXGIAdapter* m_dxgiAdapter = nullptr;
-	IDXGIFactory* m_dxgiFactory = nullptr;
+    unsigned int m_sampleCount;   ///< Número de muestras para MSAA.
+    unsigned int m_qualityLevels; ///< Niveles de calidad para MSAA.
+
+    // Punteros a interfaces DXGI
+    IDXGIDevice* m_dxgiDevice = nullptr; ///< Dispositivo DXGI.
+    IDXGIAdapter* m_dxgiAdapter = nullptr; ///< Adaptador DXGI.
+    IDXGIFactory* m_dxgiFactory = nullptr; ///< Fábrica DXGI.
 };

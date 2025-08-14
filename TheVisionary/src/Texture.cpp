@@ -1,3 +1,8 @@
+/**
+ * @file Texture.cpp
+ * @brief Carga/creación, enlace y liberación de texturas 2D (SRV).
+ */
+
 #define STB_IMAGE_IMPLEMENTATION
 #include "stb_image.h"
 #include "Texture.h"

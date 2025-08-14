@@ -1,3 +1,8 @@
+/**
+ * @file ShaderProgram.cpp
+ * @brief Compilación/creación de Vertex/Pixel Shaders y configuración del programa de shaders.
+ */
+
 #include "ShaderProgram.h"
 #include "Device.h"
 #include "DeviceContext.h"

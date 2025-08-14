@@ -1,3 +1,8 @@
+/**
+ * @file DepthStencilView.cpp
+ * @brief Creación y enlace de Depth Stencil Views (DSV) al pipeline.
+ */
+
 #include "DepthStencilView.h"
 #include "Device.h"
 #include "DeviceContext.h"

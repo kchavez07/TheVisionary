@@ -1,3 +1,8 @@
+/**
+ * @file Device.cpp
+ * @brief Implementación del dispositivo D3D11 y creación de recursos.
+ */
+
 #include "Device.h"
 
 void

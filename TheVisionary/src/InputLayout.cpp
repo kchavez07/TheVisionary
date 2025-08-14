@@ -1,3 +1,8 @@
+/**
+ * @file InputLayout.cpp
+ * @brief Creación y aplicación del Input Layout para el ensamblado de vértices.
+ */
+
 #include "InputLayout.h"
 #include "Device.h"
 #include "DeviceContext.h"

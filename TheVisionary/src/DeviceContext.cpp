@@ -1,3 +1,8 @@
+/**
+ * @file DeviceContext.cpp
+ * @brief Implementación del contexto de dispositivo D3D11 y operaciones de pipeline.
+ */
+
 #include "DeviceContext.h"
 
 void

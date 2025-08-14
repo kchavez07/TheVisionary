@@ -1,3 +1,8 @@
+/**
+ * @file SamplerState.cpp
+ * @brief Creación y aplicación del estado de muestreo para texturas en D3D11.
+ */
+
 #include "SamplerState.h"
 #include "Device.h"
 #include "DeviceContext.h"

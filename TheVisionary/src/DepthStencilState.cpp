@@ -1,3 +1,8 @@
+/**
+ * @file DepthStencilState.cpp
+ * @brief Configuración y uso del estado de profundidad y stencil en D3D11.
+ */
+
 #include "DepthStencilState.h"
 #include "Device.h"
 #include "DeviceContext.h"

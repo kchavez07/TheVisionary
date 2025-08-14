@@ -1,3 +1,8 @@
+/**
+ * @file Viewport.cpp
+ * @brief Configuración y aplicación del viewport de render.
+ */
+
 #include "Viewport.h"
 #include "Window.h"
 #include "DeviceContext.h"

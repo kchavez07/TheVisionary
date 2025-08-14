@@ -1,3 +1,8 @@
+/**
+ * @file ModelLoader.cpp
+ * @brief Carga y procesamiento de modelos (OBJ/FBX), materiales y texturas.
+ */
+
 #include "ModelLoader.h"
 #include "OBJ_Loader.h"
 

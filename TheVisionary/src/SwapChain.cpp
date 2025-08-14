@@ -1,3 +1,8 @@
+/**
+ * @file SwapChain.cpp
+ * @brief Creación del dispositivo, swap chain y extracción del back buffer.
+ */
+
 #include "SwapChain.h"
 #include "Device.h"
 #include "DeviceContext.h"

@@ -1,3 +1,8 @@
+/**
+ * @file Buffer.cpp
+ * @brief Gestión de Vertex/Index/Constant Buffers (creación, actualización y enlace).
+ */
+
 #include "Buffer.h"
 #include "Device.h"
 #include "DeviceContext.h"

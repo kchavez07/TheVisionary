@@ -1,4 +1,9 @@
-﻿#include "BaseApp.h"
+﻿/**
+ * @file BaseApp.cpp
+ * @brief Bucle principal, inicialización de DX11 y orquestación del render.
+ */
+
+#include "BaseApp.h"
 #include "ECS/Transform.h"
 #include "imgui.h"
 
@@ -130,9 +135,9 @@ HRESULT BaseApp::init()
 
         // Textura principal (intenta PNG y luego DDS)
         Texture ninjaSkin;
-        HRESULT th = ninjaSkin.init(m_device, "ModelsFBX\\NinjaObscurity\\ninja_skin_01", PNG);
+        HRESULT th = ninjaSkin.init(m_device, "ModelsFBX\\NinjaObscurity\\ninja_skin_02", PNG);
         if (FAILED(th)) {
-            th = ninjaSkin.init(m_device, "ModelsFBX\\NinjaObscurity\\ninja_skin_01", DDS);
+            th = ninjaSkin.init(m_device, "ModelsFBX\\NinjaObscurity\\ninja_skin_02", DDS);
         }
 
         std::vector<Texture> ninjaTex;
@@ -159,6 +164,71 @@ HRESULT BaseApp::init()
 
         m_actors.push_back(ninja);
     }
+
+    // 10) ACTOR: Plano simple (suelo con Lava.png)
+    {
+        const float kSize = 20.0f;  // mitad del tamaño del plano
+        const float kTiling = 6.0f;   // repetición de la textura en U/V
+
+        m_APlane = EU::MakeShared<Actor>(m_device);
+        if (m_APlane.isNull()) {
+            ERROR("Main", "InitDevice", "Failed to create Plane Actor.");
+            return E_FAIL;
+        }
+
+        // Malla del plano (UVs preparados para tiling)
+        SimpleVertex planeVertices[] =
+        {
+            { XMFLOAT3(-kSize, 0.0f, -kSize), XMFLOAT2(0.0f,    0.0f) },
+            { XMFLOAT3(kSize, 0.0f, -kSize), XMFLOAT2(kTiling, 0.0f) },
+            { XMFLOAT3(kSize, 0.0f,  kSize), XMFLOAT2(kTiling, kTiling) },
+            { XMFLOAT3(-kSize, 0.0f,  kSize), XMFLOAT2(0.0f,    kTiling) },
+        };
+        WORD planeIndices[] = { 0,2,1, 0,3,2 };
+
+        planeMesh.m_vertex.assign(std::begin(planeVertices), std::end(planeVertices));
+        planeMesh.m_index.assign(std::begin(planeIndices), std::end(planeIndices));
+        planeMesh.m_numVertex = 4;
+        planeMesh.m_numIndex = 6;
+
+        std::vector<MeshComponent> planeMeshes{ planeMesh };
+        m_APlane->setMesh(m_device, planeMeshes);
+
+        // *** Textura del piso: ModelsFBX\NinjaObscurity\Lava.png ***
+        HRESULT hr = m_PlaneTexture.init(m_device, "ModelsFBX\\NinjaObscurity\\Lava", PNG);
+        if (FAILED(hr)) {
+            // Fallback si no se encuentra la Lava
+            if (FAILED(m_PlaneTexture.init(m_device, "Textures\\Default", DDS)))
+                m_PlaneTexture.init(m_device, "Textures\\Default", PNG);
+        }
+
+        std::vector<Texture> planeTextures{ m_PlaneTexture };
+        m_APlane->setTextures(planeTextures);
+
+        // Transform (ajusta Y si tu escena usa -5.0f como suelo)
+        m_APlane->getComponent<Transform>()->setTransform(
+            EU::Vector3(0.0f, -5.0f, 0.0f),   // posición
+            EU::Vector3(0.0f, 0.0f, 0.0f),   // rotación
+            EU::Vector3(1.0f, 1.0f, 1.0f)    // escala
+        );
+
+        m_APlane->setCastShadow(false);
+        m_APlane->setReceiveShadow(true);
+
+        m_actors.push_back(m_APlane);
+    }
+
+    // --- 11) Luz ---
+    m_LightPos = XMFLOAT4(2.0f, 4.0f, -2.0f, 1.0f);
+
+    // --- 12) ImGui (al final del init gráfico) ---
+    m_userInterface.init(
+        m_window.m_hWnd,
+        m_device.m_device,
+        m_deviceContext.m_deviceContext
+    );
+
+    return S_OK;
 
     // --- 10) Actor: Plano simple ---
     {

@@ -1,30 +1,48 @@
-﻿#pragma once
+﻿/**
+ * @file Window.h
+ * @brief Declaración de la clase Window para gestión básica de ventana Win32.
+ */
+
+#pragma once
 #include "Prerequisites.h"
 
-class
-	Window {
+ /**
+  * @class Window
+  * @brief Administra la ventana principal: creación, bucle de actualización, render y destrucción.
+  */
+class Window {
 public:
-	Window() = default;
-	~Window() = default;
+    /** Constructor por defecto. */
+    Window() = default;
 
-	HRESULT
-		init(HINSTANCE hInstance, int nCmdShow, WNDPROC wndproc);
+    /** Destructor por defecto. */
+    ~Window() = default;
 
-	void
-		update();
+    /**
+     * @brief Inicializa y crea la ventana Win32.
+     * @param hInstance Instancia de la aplicación.
+     * @param nCmdShow Modo de visualización de la ventana (SW_SHOW, etc.).
+     * @param wndproc Procedimiento de ventana (callback Win32).
+     * @return HRESULT de la operación (S_OK si tuvo éxito).
+     */
+    HRESULT init(HINSTANCE hInstance, int nCmdShow, WNDPROC wndproc);
 
-	void
-		render();
+    /** @brief Actualiza el estado de la ventana (procesamiento por cuadro). */
+    void update();
 
-	void
-		destroy();
+    /** @brief Realiza el render asociado a la ventana (por cuadro). */
+    void render();
+
+    /** @brief Libera recursos asociados y destruye la ventana. */
+    void destroy();
 
 public:
-	HWND m_hWnd = nullptr;
-	unsigned int m_width;
-	unsigned int m_height;
+    HWND m_hWnd = nullptr;           ///< Handle de la ventana Win32.
+    unsigned int m_width;            ///< Ancho actual de la ventana (px).
+    unsigned int m_height;           ///< Alto actual de la ventana (px).
+
 private:
-	HINSTANCE m_hInst = nullptr;
-	RECT m_rect;
-	std::string m_windowName = "The Visionary Engine";
+    HINSTANCE m_hInst = nullptr;     ///< Instancia de la aplicación.
+    RECT m_rect;                     ///< Rect de cliente/ventana.
+    std::string m_windowName = "The Visionary Engine"; ///< Título/nombre de la ventana.
 };

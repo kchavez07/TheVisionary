@@ -1,3 +1,8 @@
+/**
+ * @file RenderTargetView.cpp
+ * @brief Creación, limpieza y enlace de Render Target Views (RTV).
+ */
+
 #include "RenderTargetView.h"
 #include "Device.h"
 #include "Texture.h"

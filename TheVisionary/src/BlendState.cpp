@@ -1,3 +1,8 @@
+/**
+ * @file BlendState.cpp
+ * @brief Configuración y uso del estado de blending (transparencias) en D3D11.
+ */
+
 #include "BlendState.h"
 #include "Device.h"
 #include "DeviceContext.h"

@@ -1,3 +1,8 @@
+/**
+ * @file Screenshot.cpp
+ * @brief Captura de pantalla del back buffer y utilidades de UI asociadas.
+ */
+
 #include "Screenshot.h"
 #include "Window.h"
 #include "SwapChain.h"
